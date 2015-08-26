@@ -1,0 +1,75 @@
+@import "colors";
+
+.adjusted {
+  color: red;
+}
+
+.btn {
+  cursor: pointer;
+  width: auto;
+  line-height: 40px !important;
+  margin-bottom: 1rem;
+  background: $blue;
+  color: white;
+  height: 40px !important;
+  padding: 0px 10px;
+  text-align: center;
+  &.expand {
+    width: 100%;
+  }
+  &.rounded {
+    border-radius: 5px;
+  }
+  &:hover {
+    background: $blue * 0.8;
+  }
+  &.tilt {
+    background: $red;
+    &:hover {
+      background: $red * 0.8;
+    }
+  }
+  &.locked {
+    background: $gray;
+  }
+  &.do {
+    background: $orange;
+  }
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  margin: 2px;
+  line-height: 45px;
+  text-align: center;
+  color: white;
+  background: $blue;
+  border-radius: 4px;
+  &:hover {
+    background: $light-blue;
+  }
+  &.active {
+    background: $green;
+  }
+}
+
+.kpi-progress {
+  height: 10px !important;
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+  border: $gray * 0.8 1px solid;
+  margin: 5px 0px;
+  background: $gray;
+  aside {
+    height: 10px;
+    background: $blue;
+  }
+  &.tilt {
+    border-color: $red;
+    aside {
+      background: $red * 1.4;
+    }
+  }
+}

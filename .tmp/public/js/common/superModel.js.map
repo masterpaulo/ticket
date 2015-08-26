@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "superModel.js",
+  "sourceRoot": "./",
+  "sources": [
+    "superModel.coffee"
+  ],
+  "names": [],
+  "mappings": "AACA,GAAG,CAAC,OAAJ,CAAY,OAAZ,EAAoB;EAClB,WADkB,EAElB,SAAC,EAAD;IACE,IAAC,CAAA,OAAD,GAAW;IACX,IAAC,CAAA,OAAD,GAAW,OAAO,CAAC,IAAR,CAAa,cAAb;AAEX,WAAO,EAAA,CAAG,2BAAH,EAAgC;MAAC,EAAA,EAAG,KAAJ;KAAhC,EAA6C,IAAC,CAAA,OAA9C;EAJT,CAFkB;CAApB"
+}

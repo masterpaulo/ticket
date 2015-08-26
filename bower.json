@@ -1,0 +1,59 @@
+{
+  "name": "Kpi Dependencies",
+  "version": "0.0.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components",
+    "test",
+    "tests",
+    "js"
+  ],
+  "dependencies": {
+    "angular": "latest",
+    "angular-route": "latest",
+    "angular-resource": "latest",
+    "angular-animate": "latest",
+    "angular-material": "latest",
+    "angular-aria": "latest",
+    "lodash": "latest",
+    "FileSaver": "latest",
+    "angular-click-outside": "~2.0.1"
+  },
+  "install": {
+    "path": {
+      "css": "assets/styles/dependencies",
+      "js": "assets/js/dependencies"
+    },
+    "sources": {
+      "angular": [
+        "bower_components/angular/angular.js",
+        "bower_components/angular-animate/angular-animate.js",
+        "bower_components/angular-route/angular-route.js",
+        "bower_components/angular-resource/angular-resource.js"
+      ],
+      "lodash": [
+        "bower_components/lodash/dist/lodash.js"
+      ],
+      "foundation": [
+        "bower_components/foundation/css/foundation.css",
+        "bower_components/foundation/css/normalize.css"
+      ],
+      "FileSaver": [
+        "bower_components/FileSaver/FileSaver.js"
+      ]
+    },
+    "ignore": [
+      "jquery",
+      "jquery-placeholder",
+      "angular-animate",
+      "angular-touch",
+      "angular-mocks",
+      "angular-route",
+      "angular-resource",
+      "jquery.cookie",
+      "fastclick",
+      "modernizr"
+    ]
+  }
+}

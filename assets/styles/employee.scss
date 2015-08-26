@@ -1,0 +1,43 @@
+@import "core/core";
+
+#scheduled-evaluation {
+  width: 100%;
+  background: $red;
+  line-height: 40px;
+  height: 40px;
+  color: white;
+  text-align: center;
+}
+
+#evaluate_leader_btn {
+  width: 400px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  color: white;
+  background: $blue;
+  border-radius: 10px;
+  margin: 0 auto;
+  cursor: pointer;
+  margin-top: 50px;
+  &:hover {
+    background: $blue * 0.8;
+  }
+}
+
+#dontEvaluate {
+  position: fixed;
+  padding: 10px;
+  top: 50%;
+  margin-top: -100px;
+  left: 50%;
+  margin-left: -200px;
+  width: 400px;
+  height: 200px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: rgba(black, 0.3) 0px 5px 5px;
+  textarea {
+    margin-bottom: 10px;
+  }
+}

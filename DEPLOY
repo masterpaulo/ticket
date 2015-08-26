@@ -1,0 +1,10 @@
+if [ -z "$1" ]
+then
+	docker run --name perMONGO -itd -p 4001:27017 mongo:latest
+	docker run -itd -e MYSQL_DATABASE=performance -e MYSQL_USER=kpi-master -e MYSQL_PASSWORD=test -e MYSQL_ROOT_PASSWORD=test --name perSQL -p 4002:3306 mysql:latest
+	docker run -itd --link perSQL:mysql --link perMONGO:mongo --name performance -p 4000:1337 -p 4004:4004 -v `pwd`:/src neilm/training
+else
+	docker run -itd -e MYSQL_DATABASE=performance -e MYSQL_USER=kpi-master -e MYSQL_PASSWORD=test -e MYSQL_ROOT_PASSWORD=test --name perSQL mysql:latest
+	docker run --name perMONGO -itd mongo:latest
+	docker run -itd --link perSQL:mysql --link perMONGO:mongo --name performance -e VIRTUAL_HOST=performance.meditab.com -v `pwd`:/src neilm/training
+fi

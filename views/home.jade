@@ -1,0 +1,35 @@
+doctype html
+html(class="teal")
+  head
+    title Ticketing System
+    meta(name="viewport",content="width=device-width, initial-scale=1, maximum-scale=1")
+    // STYLES
+    link(rel="stylesheet", href="/styles/dependencies/angular-material.css?v=4ATF1me")
+    link(rel="stylesheet", href="/styles/dependencies/angular-material.min.css?v=4ATF1me")
+    link(rel="stylesheet", href="/styles/home.css?v=4ATF1me")
+    // STYLES END
+    link(rel="stylesheet", href="/materialize/materialize.css")
+
+  body(class="container teal lighten-1")
+    div( class="container white")
+      div#form(layout="column")
+        figure
+          image
+        h1(class="center") TICKETING SYSTEM
+
+        div(class="row")
+          form(action="/login",method="POST",layout="column",class="col s6 offset-s3 ")
+            label Email
+            input(type="email",name="email",layout="column")
+            label Password
+            input(type="password",name="password")
+            input.btn(type="submit",value="SIGN IN")
+        div(class="center")
+          a(href="http://am.medspecialized.com") retrieve password
+          p v #{version}
+  // SCRIPTS
+  
+  // SCRIPTS END
+
+  if sails.config.livereloadPath
+    script(src="#{sails.config.livereloadPath}")

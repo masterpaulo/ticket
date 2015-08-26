@@ -1,0 +1,922 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"line",
+				"line-height"
+			],
+			[
+				"buil",
+				"buildingId"
+			],
+			[
+				"buidl",
+				"buildingId"
+			],
+			[
+				"bui",
+				"buildingId"
+			],
+			[
+				"object",
+				"ObjectId"
+			],
+			[
+				"option",
+				"optionScore"
+			],
+			[
+				"requie",
+				"requireAllToPass"
+			],
+			[
+				"requir",
+				"requireAllToPass"
+			],
+			[
+				"opt",
+				"option"
+			],
+			[
+				"prese",
+				"presetScore"
+			],
+			[
+				"optio",
+				"optionScore"
+			],
+			[
+				"preset",
+				"presetScoreObj"
+			],
+			[
+				"Opti",
+				"optionScore"
+			],
+			[
+				"optin",
+				"options"
+			],
+			[
+				"cri",
+				"criterias"
+			],
+			[
+				"criteri",
+				"criteriaGroups"
+			],
+			[
+				"Check",
+				"checklist"
+			],
+			[
+				"attri",
+				"attribute"
+			],
+			[
+				"require",
+				"requiredToPass"
+			],
+			[
+				"reu",
+				"required"
+			],
+			[
+				"indexo",
+				"indexOfCriteria"
+			],
+			[
+				"requi",
+				"requiredAllToPass"
+			],
+			[
+				"crite",
+				"criteriaOBJ"
+			],
+			[
+				"INDE",
+				"indexOfCriteria"
+			],
+			[
+				"criteriA",
+				"criteriaOBJ"
+			],
+			[
+				"r2p",
+				"r2pInd"
+			],
+			[
+				"criter",
+				"criteriaOBJ"
+			],
+			[
+				"criteria",
+				"criteria_hold"
+			],
+			[
+				"reui",
+				"requireAll"
+			],
+			[
+				"indexOf",
+				"indexOfCriteria"
+			],
+			[
+				"requ",
+				"requiredToPass"
+			],
+			[
+				"cr",
+				"criteriaOBJ"
+			],
+			[
+				"Requi",
+				"requireAll"
+			],
+			[
+				"indexO",
+				"indexOfCriteria"
+			],
+			[
+				"Checkli",
+				"checklistID"
+			],
+			[
+				"index",
+				"indexOfCriteria"
+			],
+			[
+				"Index",
+				"indexOfCriteria"
+			],
+			[
+				"string",
+				"string2"
+			],
+			[
+				"text-",
+				"text-align"
+			],
+			[
+				"route",
+				"routeParams	\\$routeParams"
+			],
+			[
+				"attributePer",
+				"attributePercentage"
+			],
+			[
+				"create",
+				"createdBy"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "assets/js/administrator/app.coffee",
+			"settings":
+			{
+				"buffer_size": 428,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "views/administrator.jade",
+			"settings":
+			{
+				"buffer_size": 1555,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "assets/templates/administrator/users.jade",
+			"settings":
+			{
+				"buffer_size": 8,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "assets/js/common/NavigatorCtrl.coffee",
+			"settings":
+			{
+				"buffer_size": 252,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "assets/js/common/AccountSettingsCtrl.coffee",
+			"settings":
+			{
+				"buffer_size": 79,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "assets/templates/common/AccountSettings.jade",
+			"settings":
+			{
+				"buffer_size": 516,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "assets/js/hr/app.coffee",
+			"settings":
+			{
+				"buffer_size": 437,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "assets/js/hr/controllers/UsersCtrl.coffee",
+			"settings":
+			{
+				"buffer_size": 55,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "tasks/pipeline.js",
+			"settings":
+			{
+				"buffer_size": 3170,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/controllers/UserController.coffee",
+			"settings":
+			{
+				"buffer_size": 55,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"insa",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/mac/Projects/kpi-kra",
+		"/Users/mac/Projects/kpi-kra/.tmp/public/js",
+		"/Users/mac/Projects/kpi-kra/.tmp/public/js/administrator",
+		"/Users/mac/Projects/kpi-kra/.tmp/public/js/hr",
+		"/Users/mac/Projects/kpi-kra/.tmp/public/templates",
+		"/Users/mac/Projects/kpi-kra/assets",
+		"/Users/mac/Projects/kpi-kra/assets/js",
+		"/Users/mac/Projects/kpi-kra/assets/js/administrator",
+		"/Users/mac/Projects/kpi-kra/assets/js/administrator/controllers",
+		"/Users/mac/Projects/kpi-kra/assets/js/home",
+		"/Users/mac/Projects/kpi-kra/assets/js/hr",
+		"/Users/mac/Projects/kpi-kra/assets/templates",
+		"/Users/mac/Projects/kpi-kra/assets/templates/administrator",
+		"/Users/mac/Projects/kpi-kra/assets/templates/common",
+		"/Users/mac/Projects/kpi-kra/tasks/config",
+		"/Users/mac/Projects/kpi-kra/views"
+	],
+	"file_history":
+	[
+		"/Users/mac/Projects/kpi-kra/.tmp/public/templates/jst_administrator.js",
+		"/Users/mac/Projects/kpi-kra/tasks/config/jst.js",
+		"/Users/mac/Projects/kpi-kra/tasks/config/watch.js",
+		"/Users/mac/Projects/kpi-kra/api/services/View.coffee",
+		"/Users/mac/Projects/kpi-kra/api/models/User.coffee",
+		"/Users/mac/Projects/kpi-kra/assets/js/administrator/controllers/UsersCtrl.coffee",
+		"/Users/mac/Projects/kpi-kra/.tmp/public/styles/administrator.css",
+		"/Users/mac/Projects/kpi-kra/assets/styles/core/_layouts.sass",
+		"/Users/mac/Projects/kpi-kra/assets/styles/administrator.sass",
+		"/Users/mac/Projects/kpi-kra/views/hr.jade",
+		"/Users/mac/Projects/kpi-kra/views/administrator.jade",
+		"/Users/mac/Projects/kpi-kra/api/controllers/AuthController.coffee",
+		"/Users/mac/Projects/kpi-kra/config/routes.js",
+		"/Users/mac/Projects/kpi-kra/api/policies/isAjax.coffee",
+		"/Users/mac/Projects/kpi-kra/assets/js/hr/app.coffee",
+		"/Users/mac/Projects/kpi-kra/package.json",
+		"/Users/mac/Projects/kpi-kra/config/passport.js",
+		"/Users/mac/Projects/kpi-kra/assets/styles/core/_icons.sass",
+		"/Users/mac/Projects/kpi-kra/api/models/Evaluation.coffee",
+		"/Users/mac/Projects/kpi-kra/assets/styles/core/_core.sass",
+		"/Users/mac/Projects/kpi-kra/assets/styles/core/_colors.sass",
+		"/Users/mac/Projects/kpi-kra/views/supervisor.jade",
+		"/Users/mac/Projects/kpi-kra/assets/styles/home.sass",
+		"/Users/mac/Projects/kpi-kra/views/member.jade",
+		"/Users/mac/Projects/kpi-kra/views/home.jade",
+		"/Users/mac/Projects/kpi-kra/api/models/EvaluationSchedule.coffee",
+		"/Users/mac/Projects/kpi-kra/tasks/config/copy.js",
+		"/Users/mac/Projects/kpi-kra/tasks/config/sync.js",
+		"/Users/mac/Projects/kpi-kra/config/policies.js",
+		"/Users/mac/Projects/kpi-kra/assets/js/home/app.coffee",
+		"/Users/mac/Projects/kpi-kra/api/services/UserData.coffee",
+		"/Users/mac/Projects/kpi-kra/api/services/Encrypt.coffee",
+		"/Users/mac/Projects/kpi-kra/config/models.js",
+		"/Users/mac/Projects/kpi-kra/api/controllers/UserController.coffee",
+		"/Users/mac/Projects/kpi-kra/api/models/Company.coffee",
+		"/Users/mac/Projects/kpi-kra/api/models/Form.coffee",
+		"/Users/mac/Projects/kpi-kra/api/models/Membership.coffee",
+		"/Users/mac/Projects/kpi-kra/api/models/Team.coffee",
+		"/Users/mac/Projects/kpi-kra/config/connections.js",
+		"/Users/mac/Projects/kpi-kra/mysql_setup.sql",
+		"/Users/mac/Projects/kpi-kra/tasks/register/prod.js",
+		"/Users/mac/Projects/kpi-kra/Gruntfile.js",
+		"/Users/mac/Projects/kpi-kra/test/coffee/unit/admin/controllers.coffee",
+		"/Users/mac/Projects/kpi-kra/bower.json",
+		"/Users/mac/Projects/kpi-kra/tasks/register/build.js",
+		"/Users/mac/Projects/kpi-kra/tasks/register/compileAssets.js",
+		"/Users/mac/Projects/kpi-kra/tasks/register/default.js",
+		"/Users/mac/Projects/kpi-kra/tasks/config/sails-linker.js",
+		"/Users/mac/Projects/kpi-kra/tasks/register/linkAssets.js",
+		"/Users/mac/Projects/kpi-kra/tasks/config/sass.js",
+		"/Users/mac/Projects/kpi-kra/tasks/config/coffee.js",
+		"/Users/mac/Projects/kpi-kra/tasks/pipeline.js",
+		"/Users/mac/Projects/kpi-kra/assets/js/home/test.coffee",
+		"/Users/mac/Projects/kpi-kra/.gitignore",
+		"/Users/mac/Projects/kpi-kra/.tmp/public/styles/home.css.map",
+		"/Users/mac/Projects/kpi-kra/.tmp/public/styles/home.css",
+		"/Users/mac/Projects/kpi-kra/tasks/config/clean.js",
+		"/Users/mac/Projects/kpi-kra/app.js",
+		"/Users/mac/Projects/kpi-kra/test/admin-unit.js",
+		"/Users/mac/Projects/kpi-kra/.tmp/public/min/home.min.js",
+		"/Users/mac/Projects/kpi-kra/test/client-unit.js",
+		"/Users/mac/Projects/kpi-kra/test/citizen-unit.js",
+		"/Users/mac/Projects/kpi-kra/test/agent-unit.js",
+		"/Users/mac/Projects/kpi-kra/nodemon.json",
+		"/Users/mac/Projects/kpi-kra/tasks/register/buildProd.js",
+		"/Users/mac/Projects/kpi-kra/.tmp/public/templates/jst_home.js",
+		"/Users/mac/Projects/kpi-kra/tasks/register/linkAssetsBuild.js",
+		"/Users/mac/Projects/kpi-kra/tasks/register/linkAssetsBuildProd.js",
+		"/Users/mac/Projects/kpi-kra/config/env/development.js",
+		"/Users/mac/Projects/kpi-kra/config/env/production.js",
+		"/Users/mac/Projects/kpi-kra/assets/templates/home/test.jade",
+		"/Users/mac/Projects/kpi-kra/.tmp/public/min/home.min.css",
+		"/Users/mac/Projects/kpi-kra/.tmp/public/concat/home.css",
+		"/Users/mac/Projects/kpi-kra/tasks/config/cssmin.js",
+		"/Users/mac/Projects/kpi-kra/tasks/config/jade.js",
+		"/Users/mac/Projects/kpi-kra/tasks/register/syncAssets.js",
+		"/Users/mac/Projects/kpi-kra/.tmp/public/templates/home/test.html",
+		"/Users/mac/Projects/kpi-kra/tasks/register/templateBuild.js",
+		"/Users/mac/Projects/kpi-kra/assets/templates/home/test.html",
+		"/Users/mac/Projects/kpi-kra/tasks/config/uglify.js",
+		"/Users/mac/Projects/kpi-kra/tasks/config/concat.js",
+		"/Users/mac/Projects/kpi-kra/assets/js/home/home.coffee",
+		"/Users/mac/Projects/kpi-kra/assets/js/dependencies/sails.io.js",
+		"/Users/mac/Projects/kpi-del/views/app_layout.jade",
+		"/Users/mac/Projects/mewe/assets/styles/client.scss",
+		"/Users/mac/Projects/mewe/assets/templates/client/assignment.jade",
+		"/Users/mac/Projects/mewe/assets/templates/client/building.jade",
+		"/Users/mac/Projects/mewe/assets/templates/client/assignments.jade",
+		"/Users/mac/Projects/mewe/config/routes.js",
+		"/Users/mac/Projects/mewe/assets/js/app/controllers/client.controllers.coffee",
+		"/Users/mac/Projects/mewe/api/models/Inspection.coffee",
+		"/Users/mac/Projects/mewe/api/models/User.coffee",
+		"/Users/mac/Projects/mewe/api/models/Media.coffee",
+		"/Users/mac/Desktop/rey/ghghjgj",
+		"/Users/mac/Desktop/rey/inspection_response.json",
+		"/Users/mac/Projects/mewe/api/controllers/InspectionController.coffee",
+		"/Users/mac/Desktop/rey/trial/isInt.js",
+		"/Users/mac/Projects/mewe/assets/templates/client/checklist.jade",
+		"/Users/mac/Projects/mewe/api/models/Checklist.coffee",
+		"/Users/mac/Desktop/rey/back_up download of inspection controller.coffee",
+		"/Users/mac/Projects/mewe/api/controllers/ChecklistController.coffee",
+		"/Users/mac/Desktop/rey/back_up download of inspection controller.js",
+		"/Users/mac/Projects/mewe/api/controllers/CategoryController.coffee",
+		"/Users/mac/Desktop/rey/try_path/y/path2.html",
+		"/Users/mac/Desktop/rey/try_path/y/path.html",
+		"/Users/mac/Projects/mewe/nodemon.json",
+		"/Users/mac/Projects/mewe/package.json",
+		"/Users/mac/Projects/lakshmi/config/routes.js",
+		"/Users/mac/Projects/kpi-del/config/blueprints.js",
+		"/Users/mac/Projects/kpi-del/config/views.js",
+		"/Users/mac/Projects/kpi-del/api/controllers/SiteController.coffee",
+		"/Users/mac/Projects/kpi-del/assets/js/app/hr/views/users/kpi-sheet.jade",
+		"/Users/mac/Projects/kpi-del/config/routes.js",
+		"/Users/mac/Projects/kpi-del/config/policies.js",
+		"/Users/mac/Projects/kpi-del/assets/js/app/hr/views/users/show.jade",
+		"/Users/mac/Projects/kpi-del/assets/js/app/hr/views/users/new.jade",
+		"/Users/mac/Projects/kpi-del/assets/js/app/hr/views/users/index.jade",
+		"/Users/mac/Projects/kpi-del/assets/js/app/hr/config/routes.js.coffee",
+		"/Users/mac/Projects/kpi-del/assets/js/app/hr/models/performanceform.js.coffee",
+		"/Users/mac/Projects/kpi-del/api/controllers/TeammembersController.coffee",
+		"/Users/mac/Projects/kpi-del/api/controllers/PerformanceformsController.coffee",
+		"/Users/mac/Projects/kpi-del/assets/js/app/hr/controllers/users.js.coffee",
+		"/Users/mac/Projects/kpi-del/assets/js/app/hr/views/upward/index.jade",
+		"/Users/mac/Projects/kpi-del/assets/js/app/leader/controllers/teams.js.coffee",
+		"/Users/mac/Projects/kpi-del/assets/js/app/hr/views/upward/detail.jade",
+		"/Users/mac/Projects/kpi-del/assets/js/app/hr/models/team.js.coffee",
+		"/Users/mac/Projects/kpi-del/api/models/Team.js",
+		"/Users/mac/Projects/kpi-del/api/models/Teammember.js"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"location",
+			"id",
+			"userId",
+			"checkCompany",
+			"master",
+			"angular",
+			"grunt",
+			".min",
+			"tri",
+			"type",
+			"photos",
+			"checklist",
+			"results[0]",
+			"checklists[0]",
+			"checklist[0]",
+			"checklisjt[0]",
+			"checklists.",
+			"checklists.length",
+			"image",
+			"RequireAllTo",
+			"requireAllToPass",
+			"checkbox",
+			"answered_form",
+			"TeamShowHrCtrl",
+			"populate",
+			"reb",
+			"is",
+			"KpiHomeMemberCtrl",
+			"datetime",
+			"showStatus",
+			"KpiMembersListLeaderCtrl",
+			"MemberNewKpiLeaderCtrl",
+			"KpiMembersListLeaderCtrl",
+			"update",
+			".new",
+			"new",
+			"MembersKPILeaderCtrl",
+			"        \n",
+			"showTeam",
+			"for team",
+			"/\"+$",
+			"tpl"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"",
+			"inspection.result",
+			"inspection.checklist"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "assets/js/administrator/app.coffee",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 428,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								424,
+								143
+							]
+						],
+						"settings":
+						{
+							"open_with_edit": true,
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "views/administrator.jade",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1555,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								818,
+								818
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Jade/Syntaxes/Jade.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "assets/templates/administrator/users.jade",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8,
+								8
+							]
+						],
+						"settings":
+						{
+							"open_with_edit": true,
+							"syntax": "Packages/Jade/Syntaxes/Jade.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "assets/js/common/NavigatorCtrl.coffee",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 252,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								252,
+								252
+							]
+						],
+						"settings":
+						{
+							"open_with_edit": true,
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "assets/js/common/AccountSettingsCtrl.coffee",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 79,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								77,
+								77
+							]
+						],
+						"settings":
+						{
+							"open_with_edit": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "assets/templates/common/AccountSettings.jade",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 516,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								476,
+								476
+							]
+						],
+						"settings":
+						{
+							"open_with_edit": true,
+							"syntax": "Packages/Jade/Syntaxes/Jade.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "assets/js/hr/app.coffee",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 437,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								233,
+								233
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "assets/js/hr/controllers/UsersCtrl.coffee",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 55,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								55,
+								55
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "tasks/pipeline.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3170,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2282,
+								2282
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 630.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "api/controllers/UserController.coffee",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 55,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								55,
+								19
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "kpi-kra.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"reb",
+				"node_modules/bower/node_modules/cardinal/node_modules/redeyed/test/redeyed-browser.js"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 274.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

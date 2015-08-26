@@ -1,0 +1,68 @@
+doctype html
+html(ng-app="superApp")
+  head
+    title Superuser
+    base(href="http://#{base}/")
+    meta(name="viewport",content="width=device-width, initial-scale=1, maximum-scale=1 user-scalable=no")
+    link( href="https://fontastic.s3.amazonaws.com/26UitzXaU4M4paB5gpLh8e/icons.css",rel="stylesheet")
+    // STYLES
+    link(rel="stylesheet", href="/styles/dependencies/angular-material.css?v=QlX1jJh")
+    link(rel="stylesheet", href="/styles/dependencies/angular-material.min.css?v=QlX1jJh")
+    link(rel="stylesheet", href="/styles/administrator.css?v=QlX1jJh")
+    // STYLES END
+    link(rel="stylesheet", href="/materialize/materialize.css")
+
+    // SCRIPTS
+    script(src="/js/dependencies/socket.io.js?v=ha2YVtk")
+    script(src="/js/dependencies/angular.min.js?v=ha2YVtk")
+    script(src="/js/dependencies/angular-aria.js?v=ha2YVtk")
+    script(src="/js/dependencies/angular-resource.js?v=ha2YVtk")
+    script(src="/js/dependencies/angular-animate.js?v=ha2YVtk")
+    script(src="/js/dependencies/angular-material.js?v=ha2YVtk")
+    script(src="/js/dependencies/FileSaver.js?v=ha2YVtk")
+    script(src="/js/dependencies/angular-aria.min.js?v=ha2YVtk")
+    script(src="/js/dependencies/angular-material.min.js?v=ha2YVtk")
+    script(src="/js/dependencies/angular-route.js?v=ha2YVtk")
+    script(src="/js/dependencies/clickoutside.directive.js?v=ha2YVtk")
+    script(src="/js/dependencies/lodash.js?v=ha2YVtk")
+    script(src="/js/superuser/app.js?v=ha2YVtk")
+    script(src="/js/superuser/super/superCtrl.js?v=ha2YVtk")
+    script(src="/js/common/CryptoJs.js?v=ha2YVtk")
+    script(src="/js/common/NavigationCtrl.js?v=ha2YVtk")
+    script(src="/js/common/ngMeditab.js?v=ha2YVtk")
+    script(src="/js/common/superModel.js?v=ha2YVtk")
+    // SCRIPTS END
+
+body
+
+  // TEMPLATES
+  script(type="text/javascript", src="/templates/jst_superuser.js?v=o6YgqhA")
+  // TEMPLATES END
+
+
+  section
+    //- header
+      //- div(ng-controller='zzz')
+    //- ng-view
+
+    //- ng-view
+    //- ng-view.slide-right
+    div(style="height:100%", flex)
+      ng-view(style="height:100%", flex)
+
+  aside(ng-controller="NavigatorCtrl")
+
+    ul.down
+      li.i-power(ng-click="logout()")
+
+    alert-holder(position="top-right")
+    switch(position="bottom-right")
+
+
+
+if sails.config.livereloadPath
+    script(src="#{sails.config.livereloadPath}")
+
+
+
+

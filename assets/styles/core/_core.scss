@@ -1,0 +1,24 @@
+$black: #666666;
+
+@import "colors";
+@import "icons";
+@import "layouts";
+@import "ng-animate";
+@import "elements";
+
+.row {
+  max-width: none;
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  line-height: 45px;
+  text-align: center;
+  color: white;
+  background: $blue;
+  border-radius: 4px;
+  &:hover {
+    background: $light-blue;
+  }
+}
