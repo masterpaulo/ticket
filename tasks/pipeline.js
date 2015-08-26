@@ -94,6 +94,32 @@ var users = {
     templates:[
       'administrator/**/*.html'
     ]
+  },
+  employee:{
+    css:[
+      'dependencies/**/*.css',
+      'common/**/*.css',
+      'administrator.css'
+    ],
+    js:[
+      'dependencies/sails.io.js',
+      'dependencies/socket.io.js',
+      'dependencies/angular.min.js',
+      'dependencies/angular-aria.js',
+      'dependencies/angular-resource.js',
+      'dependencies/angular-animate.js',
+      'dependencies/angular-material.js',
+      'dependencies/**/*.js',
+      'employee/app.js',
+      'employee/**/*.js',
+      'common/*.js',
+      'common/**/*.js'
+
+
+    ],
+    templates:[
+      'employee/**/*.html'
+    ]
   }
 
 

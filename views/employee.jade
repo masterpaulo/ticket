@@ -1,97 +1,62 @@
-html(ng-app="TestApp")
+doctype html
+html(ng-app="ticketApp")
   head
-    title This is it
-
-    // Viewport mobile tag for sensible mobile support
+    title EMPLOYEE
+    base(href="http://#{base}/")
     meta(name="viewport",content="width=device-width, initial-scale=1, maximum-scale=1")
+    link( href="https://fontastic.s3.amazonaws.com/26UitzXaU4M4paB5gpLh8e/icons.css",rel="stylesheet")
     // STYLES
-    link(rel="stylesheet", href="/styles/angular-material.min.css")
-    link(rel="stylesheet", href="/styles/importer.css")
-    link(rel="stylesheet", href="/styles/styles.css")
+    link(rel="stylesheet", href="/styles/dependencies/angular-material.css?v=ur24RZe")
+    link(rel="stylesheet", href="/styles/dependencies/angular-material.min.css?v=ur24RZe")
+    link(rel="stylesheet", href="/styles/common/switchView/switchView.css?v=ur24RZe")
+    link(rel="stylesheet", href="/styles/administrator.css?v=ur24RZe")
     // STYLES END
-
     link(rel="stylesheet", href="/materialize/materialize.css")
+  body
+    // TEMPLATES
+    script(type="text/javascript", src="/templates/jst_employee.js?v=fsI24Ff")
+    // TEMPLATES END
+    section
+        header
+        ng-view
+    aside(ng-controller="NavigatorCtrl")
+        ul
+            li(ng-class="{active:active('/')}")
+                a.i-book(href="/")
+            li(ng-class="{active:active('/concern')}")
+                a.i-tag(href="/concern")
 
-  body(ng-contorller="TestCtrl")
-    //- md-button(class="md-primary ") This is my sample button
-    //- h1 hello {{title}}
-    //- input(type="text", ng-model="name")
-    //- h1 to the {{name}}
+        ul.down
+            li.i-power(ng-click="logout()")
 
-
-    // App SideNav Here
-
-    sectcion(ng-controller='AppCtrl', layout="row", flex='', style="background-color:#333333")
-
-        //Sidebar NavBar
-        div(class="md-raised", style=" height:100%; width:86px;", class="col s1 grey center white-text")
-            h1 P
-            h1 D
-
-
-        //Content
-        md-content(flex='', layout="column", ng-controller="TestCtrl")
-
-            div( layout="column")
-                md-toolbar
-                    div(class="md-toolbar-tools")
-                        md-button
-                            md-icon(md-svg-icon="images/icons/menu.svg")
-                        h2 EMPLOYEE VIEW
-            div(flex='', style="background-color:#F7F7F7" layout-padding)
-                md-toolbar(class="md-warm md-hue-1")
-                    div(layout="row",class="md-toolbar-tools")
-                        h2(flex='10') Date
-                        h2(flex='20') Scope
-                        h2(flex='20') Concern
-                        h2(flex='20') Description
-                        h2(flex='10') Status
-                        h2(flex='20') Actions
-                md-list
-                    md-list-item(class="md-3-line", ng-repeat="request in requests")
-                        a(class="grey lighten-3", ng-click="showPostDetail(request)", layout="row", flex)
-                            h6(flex='10') {{request.date}}
-                            h6(flex='20') {{request.scope.name}}
-                            h6(flex='20') {{request.concern.name}}
-                            h6(flex='20') {{request.scope.name}}
-                            h6(flex='10') {{request.status.name}}
-                            h6(flex='20') Actions
-
-
-            // SideNav in the right
-            md-sidenav.md-sidenav-right.md-whiteframe-z4(md-component-id='right', style="width:500px; max-width:none")
-                md-toolbar.md-theme-light
-                    div.md-toolbar-tools(layout="row", layout-align="center center")
-                        h2 Sidenav Right
-                        span(flex)
-                        md-button(class="red white-text md-raised md-disabled") {{requestView.status.name}}
-                        //span(class="badge blue", style="position:inherit; font-size:1.5rem" ) {{requestView.status.name}}
-                h1(class="container") {{requestView.scope.name}}
-                h4(class="container") {{requestView.concern.name}}
-
-                md-content( layout-padding='')
-                    p {{requestView.date}}
-                    p {{requestView.description}}
-                    form(ng-if="false")
-                        md-input-container
-                            label(for='testInput') Test input
-                            input#testInput(type='text', ng-model='textData', md-autofocus='')
-                        md-button.md-primary(ng-click='close()') Close Sidenav Right
-            md-button(class="md-fab md-fab-bottom-right", ng-click="toggleRight()")
-                md-icon(md-svg-src="images/icons/menu.svg")
-
-
-    // The linker searches for this tag and adds js.  If there's no linker, we point to sails.io.js
+        alert-holder(position="top-right")
+        switch(position="bottom-right")
     // SCRIPTS
-    script(src="/js/dependencies/sails.io.js")
-    script(src="/js/dependencies/angular.min.js")
-    script(src="/js/dependencies/angular-sails.min.js")
-    script(src="/js/dependencies/angular-animate.min.js")
-    script(src="/js/dependencies/angular-aria.min.js")
-    script(src="/js/dependencies/angular-material.min.js")
-    script(src="/js/app.js")
+    script(src="/js/dependencies/socket.io.js?v=JKtLEm8")
+    script(src="/js/dependencies/angular.min.js?v=JKtLEm8")
+    script(src="/js/dependencies/angular-aria.js?v=JKtLEm8")
+    script(src="/js/dependencies/angular-resource.js?v=JKtLEm8")
+    script(src="/js/dependencies/angular-animate.js?v=JKtLEm8")
+    script(src="/js/dependencies/angular-material.js?v=JKtLEm8")
+    script(src="/js/dependencies/FileSaver.js?v=JKtLEm8")
+    script(src="/js/dependencies/angular-aria.min.js?v=JKtLEm8")
+    script(src="/js/dependencies/angular-material.min.js?v=JKtLEm8")
+    script(src="/js/dependencies/angular-route.js?v=JKtLEm8")
+    script(src="/js/dependencies/angular.js?v=JKtLEm8")
+    script(src="/js/dependencies/clickoutside.directive.js?v=JKtLEm8")
+    script(src="/js/dependencies/lodash.js?v=JKtLEm8")
+    script(src="/js/employee/app.js?v=JKtLEm8")
+    script(src="/js/employee/admin/adminCtrl.js?v=JKtLEm8")
+    script(src="/js/employee/employee/adminCtrl.js?v=JKtLEm8")
+    script(src="/js/employee/employee/employee.js?v=JKtLEm8")
+    script(src="/js/employee/employee/employeeCtrl.js?v=JKtLEm8")
+    script(src="/js/common/CryptoJs.js?v=JKtLEm8")
+    script(src="/js/common/NavigationCtrl.js?v=JKtLEm8")
+    script(src="/js/common/ngMeditab.js?v=JKtLEm8")
+    script(src="/js/common/superModel.js?v=JKtLEm8")
+    script(src="/js/common/switchView/SwitchViewDir.js?v=JKtLEm8")
     // SCRIPTS END
 
 
-
-
+    if sails.config.livereloadPath
+        script(src="#{sails.config.livereloadPath}")
