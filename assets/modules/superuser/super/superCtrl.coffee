@@ -26,7 +26,7 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
   USERROLE = new ApiObject "userrole"
 
 
-  
+
 
   buildToggler = (navID) ->
     $scope.addScopeForm.name =''
@@ -65,11 +65,11 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
       return
 
     newScope = $scope.addScopeForm
-    
+
 
     sample = ScopeFactory.query(
-      {name:newScope.name}, 
-      (successRes)-> 
+      {name:newScope.name},
+      (successRes)->
         if sample.length > 0
           console.log "Name already exists"
         else
@@ -90,20 +90,20 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
 
         return
     )
-    
-    
 
 
 
-    
 
-  
+
+
+
+
 
   $scope.toEditScope = (event, err) ->
     if err
       console.log errRes
       return
-    
+
     $scope.editScopeForm.name = $scope.selectedScope.name
     $scope.toEdit = true
 
@@ -170,9 +170,9 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
         #console.log $scope.adminIds #list of admin ids of scopes for validation purposes
         return
     )
-    
 
-    
+
+
 
     return
 
@@ -183,18 +183,27 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
       return false
 
   $scope.addAdmin = (user, scope) ->
-    console.log user.id
-    console.log scope.id
+    # console.log user.id
+    # console.log scope.id
     $scope.search = ""
-    data = {
+    admin =
       scopeId: scope.id
       userId: user.id
-    }
+
+    roleObject =
+      roleId: 33
+      appuserId: user.id
     #$scope.ggNames.push user.profileId.firstName
     AdminFactory.save(
-      data,
+      admin,
       (successRes) ->
         console.log successRes
+        USERROLE.create roleObject
+        .exec (err,data) ->
+          if err
+            console.log 'adding userrole failed'
+          if data
+            console.log 'success adding userrole'
         $scope.fillAdminList()
         return
       ,
@@ -202,20 +211,31 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
         console.log errRes
         return
     )
-    
+
     return
 
 
   $scope.deleteAdmin = (adminId) ->
-    console.log "deleting admin : " + adminId
-    console.log AdminFactory.delete({id:adminId},
+    # console.log "deleting admin : " + adminId
+    # console.log @admin.userId
+
+    # USERROLE.find({roleId:33,appuserId: @admin.userId})
+    # .exec (err, data) ->
+    #   if err
+    #     console.log 'dont exist'
+    #   if data
+    #     console.log 'userrole exists'
+
+    AdminFactory.delete({id:adminId},
       (successRes) ->
         $scope.fillAdminList()
+        console.log "deleting admin"
+
       ,
       (errRes) ->
         console.log errRes
     )
-    
+
 
     return
   $scope.searchUser = ->
