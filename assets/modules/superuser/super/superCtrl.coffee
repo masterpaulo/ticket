@@ -219,12 +219,12 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
     # console.log "deleting admin : " + adminId
     # console.log @admin.userId
 
-    # USERROLE.find({roleId:33,appuserId: @admin.userId})
-    # .exec (err, data) ->
-    #   if err
-    #     console.log 'dont exist'
-    #   if data
-    #     console.log 'userrole exists'
+    USERROLE.delete({roleId:33,appuserId: @admin.userId})
+    .exec (err, data) ->
+      if err
+        console.log 'dont exist'
+      if data
+        console.log 'userrole exists'
 
     AdminFactory.delete({id:adminId},
       (successRes) ->
