@@ -204,6 +204,7 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
             console.log 'adding userrole failed'
           if data
             console.log 'success adding userrole'
+            console.log JSON.stringify data
         $scope.fillAdminList()
         return
       ,
@@ -218,13 +219,21 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
   $scope.deleteAdmin = (adminId) ->
     # console.log "deleting admin : " + adminId
     # console.log @admin.userId
-
-    USERROLE.delete({roleId:33,appuserId: @admin.userId})
+    USERROLE.find({roleId:33,appuserId: @admin.userId})
     .exec (err, data) ->
       if err
         console.log 'dont exist'
       if data
-        console.log 'userrole exists'
+
+        approleId = data[0].id
+        USERROLE.delete(approleId)
+        .exec (err,data) ->
+          if err
+            console.log 'error deleting'
+          if data
+            console.log 'success deleting' + data.id
+
+
 
     AdminFactory.delete({id:adminId},
       (successRes) ->
