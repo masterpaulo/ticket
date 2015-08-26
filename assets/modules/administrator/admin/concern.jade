@@ -1,0 +1,88 @@
+
+md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%")
+
+  div( layout="column")
+    md-toolbar
+      div(class="md-toolbar-tools")
+        md-button(ng-click="fillAdminList()")
+          md-icon(md-svg-icon="images/icons/menu.svg")
+        h2 Concerns
+
+  div(layout="row", flex)
+    div(flex='25', layout="column", style="background-color:#F7F7F7" )
+      md-toolbar(class=" md-hue-3", flex="25")
+          div(layout="row",class="md-toolbar-tools")
+              h2(flex) Scope
+      md-list(flex, style="max-height:75%;overflow:auto;")
+          md-list-item(class="md-3-line", ng-repeat="scope in scopes" , ng-click="selectScope(scope)")
+              .md-list-item-text
+                  h5 {{scope.name}}
+              md-divider
+
+
+
+    div(flex='75', class="grey lighten-3")
+      div.container(ng-show="selectedScope", style="position:relative; margin-top:100px")
+        div(layout='row', layout-align="center center")
+          h4 {{selectedScope.name}} scope concerns
+          
+          span(flex)
+          md-button(ng-show="selected", class="md-fab md-warn", aria-label="edit button", ng-click="toEditScope()")
+            md-icon(md-svg-src="images/icons/edit.svg")
+        
+
+        //- div#addAdminPanel(style="width: 100%;position: absolute;z-index: 9;", click-outside="search=''")
+        //-   md-input-container(style="padding-bottom:0")
+        //-     label(style="font-size:1.5rem") Add admin
+        //-     input(type="text",ng-model="search",ng-change="searchUser()")
+          
+        //-   md-list.md-whiteframe-z3.white#users_list(style="max-height: 406px;overflow: auto;background-color:white;z-index:9", ng-hide="search==''")
+        //-     md-list-item(layout="row", ng-repeat="user in users | orderBy: 'profileId.lastName' track by user.id",ng-class="{active: user.id == editor.user.id}",ng-click="addAdmin(user, selectedScope)", ng-disabled="adminExist(user)")
+        //-       header(flex='25') {{user.profileId.lastName}} , {{user.profileId.firstName}} 
+        //-       footer(flex='35') {{user.email}}
+        //-       footer(flex='35') {{user.username}}
+              
+
+
+
+        md-toolbar(class="teal", style="")
+
+          div(layout="row",class="md-toolbar-tools")
+
+            h2(flex) Concerns
+        md-list.md-whiteframe-z1.white(style="max-height:600px")
+          md-list-item(layout-padding ng-if="selectedScope.admins.length" , class="md-3-line", ng-repeat="admin in selectedScope.admins", ng-click="")
+            h5(flex) {{admin.name}}
+            md-button.md-icon-button.md-warn(ng-click="deleteAdmin(admin.id)", aria-label="delete admin")
+              md-icon(md-svg-icon="images/icons/trash.svg")
+            md-divider(ng-if="!$last")
+
+          md-list-item(ng-hide="selectedScope.admins && selectedScope.admins.length")
+            h5 No Concerns set for this Scope. 
+
+    div(layout='row', style='height:500px;')
+      section(layout='row', flex='')
+
+        md-sidenav.md-sidenav-right.md-whiteframe-z2(md-component-id='right', style="width:500px; max-width:none")
+          md-toolbar.md-theme-light.md-primary.md-hue-3
+            div.md-toolbar-tools
+              h2(ng-show="!toEdit") Add Concern
+              h2(ng-show="toEdit") Edit Concern
+          md-content(layout-padding='')
+            form(ng-if='!toEdit')
+              md-input-container
+                label(for='testInput') Concern Name
+                input#testInput(required type='text', ng-model='addScopeForm.name', md-sidenav-focus='')
+                //- input(type='submit' value='submit')
+              div(layout='row' layout-align='center right')
+                md-button.md-raised.md-primary.md-primary.md-hue-2(ng-click='addScope()') ADD
+                md-button.md-primary(ng-click='close()') CANCEL
+
+            form#editScopeForm(ng-show="toEdit")
+              md-input-container
+                label(for='ScopeName', style="font-size:1.5rem") Concern Name
+                input#eScopeName(required , type='text', ng-model='editScopeForm.name', md-autofocus='')
+              div(layout="row",  layout-align="center right")
+
+                md-button.md-raised.md-primary.md-hue-2(ng-click='editScope()') EDIT
+                md-button.md-raised(ng-click='close()') CANCEL

@@ -57,6 +57,7 @@ var users = {
       'dependencies/angular-animate.js',
       'dependencies/angular-material.js',
       'dependencies/**/*.js',
+      'superuser/app.js',
       'superuser/**/*.js',
       'common/*.js',
 
@@ -65,6 +66,32 @@ var users = {
     ],
     templates:[
       'superuser/**/*.html'
+    ]
+  },
+  administrator:{
+    css:[
+      'dependencies/**/*.css',
+      'common/**/*.css',
+      'administrator.css'
+    ],
+    js:[
+      'dependencies/sails.io.js',
+      'dependencies/socket.io.js',
+      'dependencies/angular.min.js',
+      'dependencies/angular-aria.js',
+      'dependencies/angular-resource.js',
+      'dependencies/angular-animate.js',
+      'dependencies/angular-material.js',
+      'dependencies/**/*.js',
+      'administrator/app.js',
+      'administrator/**/*.js',
+      'common/*.js',
+
+
+
+    ],
+    templates:[
+      'administrator/**/*.html'
     ]
   }
 

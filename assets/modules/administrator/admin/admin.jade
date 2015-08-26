@@ -1,0 +1,64 @@
+
+md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%")
+
+  div( layout="column")
+    md-toolbar
+      div(class="md-toolbar-tools")
+        md-button
+          md-icon(md-svg-icon="images/icons/menu.svg")
+        h2 Requests
+
+  div(layout="row", flex)
+    div(flex, layout="column", style="background-color:#F7F7F7" )
+      md-toolbar(class=" md-hue-3", flex="25")
+          div(layout="row",class="md-toolbar-tools")
+              h2(flex) Filters here...
+      div(layout-margin,flex, layout="row")
+        .md-whiteframe-z2(flex)
+          md-toolbar(class=" md-accent", flex="25")
+            .md-toolbar-tools(layout="row")
+              h3(flex, layout-align="center center") Date
+              h3(flex, layout-align="center center") Sender
+              h3(flex, layout-align="center center") Scope
+              h3(flex, layout-align="center center") Concern
+              h3(flex, layout-align="center center") Actions
+
+          md-list(flex, style="max-height:700px;overflow:auto;")
+              md-list-item(layout="row" , class="md-3-line", ng-repeat="scope in scopes" , ng-click="selectScope(scope)")
+                  .md-list-item-text(flex) 12/12/12
+                  .md-list-item-text(flex) Employee1
+                  .md-list-item-text(flex) Finance
+                  .md-list-item-text(flex) Tax too high
+                  .md-list-item-text(flex) Assassinate
+                  md-divider
+                    
+
+
+      //- div(layout="row" layout-align="center center" flex="30")
+      //-   md-button(class="md-fab md-primary md-hue-2", ng-click="toAddScope()", aria-label="add scope")
+      //-     md-icon(md-svg-src="images/icons/add-white.svg")
+
+
+  md-sidenav.md-sidenav-right.md-whiteframe-z2(md-component-id='right', style="width:500px; max-width:none")
+    md-toolbar.md-theme-light.md-primary.md-hue-3
+      div.md-toolbar-tools
+        h2(ng-show="!toEdit") Add Scope
+        h2(ng-show="toEdit") Edit Scope
+    md-content(layout-padding='')
+      form(ng-if='!toEdit')
+        md-input-container
+          label(for='testInput') Scope Name
+          input#testInput(required type='text', ng-model='addScopeForm.name', md-sidenav-focus='')
+          //- input(type='submit' value='submit')
+        div(layout='row' layout-align='center right')
+          md-button.md-raised.md-primary.md-primary.md-hue-2(ng-click='addScope()') ADD
+          md-button.md-primary(ng-click='close()') CANCEL
+
+      form#editScopeForm(ng-show="toEdit")
+        md-input-container
+          label(for='ScopeName', style="font-size:1.5rem") Name
+          input#eScopeName(required , type='text', ng-model='editScopeForm.name', md-autofocus='')
+        div(layout="row",  layout-align="center right")
+
+          md-button.md-raised.md-primary.md-hue-2(ng-click='editScope()') EDIT
+          md-button.md-raised(ng-click='close()') CANCEL
