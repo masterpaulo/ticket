@@ -11,7 +11,7 @@ app.controller 'ConcernCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $
 
   $scope.addConcernForm = {}
   $scope.selectedScope = null
-  $scope.editScopeForm = {}
+  $scope.editConcernForm = {}
   $scope.selected = false
 
   $scope.concerns = []
@@ -120,13 +120,11 @@ app.controller 'ConcernCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $
 
   
 
-  $scope.toEditScope = (event, err) ->
-    if err
-      console.log errRes
-      return
+  $scope.toEditConcern = (concern) ->
+
     
-    $scope.editScopeForm.name = $scope.selectedScope.name
-    $scope.toEdit = true
+    $scope.editConcernForm.name = concern.name
+    $scope.toEdit = concern
 
     $scope.toggleRight()
 
@@ -135,27 +133,33 @@ app.controller 'ConcernCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $
     return
 
 
-  $scope.editScope = (event, err) ->
+  $scope.editConcern = (event, err) ->
     if err
       console.log err
       return
 
     # console.log event
     # console.log err
+
+    updateConcern = 
+      name: $scope.editConcernForm.name
+
+
+    concernId = $scope.toEdit.id
+
     scopeId = $scope.selectedScope.id
     newScope = $scope.editScopeForm
-    ScopeFactory.get { id: scopeId }, (saveScope) ->
-      saveScope.name = newScope.name
-      saveScope.$save ()->
-        $scope.refresh();
+    ConcernFactory.get { id: concernId }, (saveConcern) ->
+      saveConcern.name = updateConcern.name
+      saveConcern.$save ()->
+        $scope.fillConcernList()
 
-      $scope.selectedScope = saveScope
-      $scope.close()
+        $scope.close()
+        console.log "updated!!"
 
 
-    $scope.toEdit = false
-    $scope.editScopeForm = {}
-    $scope.refresh()
+        $scope.toEdit = false
+        $scope.editScopeForm = {}
 
     return
 
