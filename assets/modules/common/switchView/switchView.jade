@@ -1,0 +1,6 @@
+.switch-view(ng-show="roles.length>1")
+	nav
+		dl.sub-nav
+			dd(ng-repeat="role in roles",ng-click="change(role.roleId)")
+				a(href="#") {{ role.name }}
+		.i-eye

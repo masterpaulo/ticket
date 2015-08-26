@@ -1,0 +1,75 @@
+.switch-view{
+	position: fixed;
+	bottom: 50px;
+	right: 50px;
+	nav{
+		position:relative;
+		padding: 2px;
+		background: rgba(white,0.5);
+		box-shadow: rgba(black,0.2) 5px 5px 5px;
+		height: 50px;
+		width: auto;
+		min-width: 50px;
+		max-width: 50px;
+		border-radius: 25px;
+		overflow: hidden;
+		transition: all .2s linear;
+		-webkit-transition: all .2s linear;
+		-moz-transition: all .2s linear;
+		
+		.i-eye{
+			position: absolute;
+			top: 2px;
+			right: 2px;
+			
+			line-height: 52px;
+			text-align: center;
+			height: 46px;
+			width: 46px;
+			border: rgba(black,0.2) 1px solid;
+			box-sizing: border-box;
+			border-radius: 23px;
+			color: rgba(black,0.4);
+			font-size: 1.4em;
+		}
+		dl{
+			position: relative;
+			opacity: 0;
+			padding: 0px;
+			margin: 0px;
+			width: auto;
+			line-height: 50px;
+			transition: all .2s linear;
+			-webkit-transition: all .2s linear;
+			-moz-transition: all .2s linear;
+			margin-right: 50px;
+		}
+		&:hover{
+			background: rgba(white,0.9);
+			max-width: 800px;
+			.i-eye{
+				color: rgba(black,0.8);
+			}
+			dl{
+				opacity: 1;
+			}
+		}
+	}
+}
+dl{
+	list-style-position: outside;
+}
+.sub-nav dd, .sub-nav dt, .sub-nav li {
+  float: left;
+  display: inline;
+  margin-left: 1rem;
+  margin-bottom: 0;
+  font-weight: 400;
+  font-size: .875rem;
+  color: #999;
+}
+.sub-nav dd a, .sub-nav dt a, .sub-nav li a {
+  color: #999;
+  padding: .1875rem 1rem;
+  text-decoration: none;
+};

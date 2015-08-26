@@ -60,6 +60,7 @@ var users = {
       'superuser/app.js',
       'superuser/**/*.js',
       'common/*.js',
+      'common/**/*.js'
 
 
 
@@ -86,7 +87,7 @@ var users = {
       'administrator/app.js',
       'administrator/**/*.js',
       'common/*.js',
-
+      'common/**/*.js'
 
 
     ],
