@@ -19,6 +19,5 @@ module.exports =
 
     userId:
       type: 'integer'
-      model: 'User'
 
 
