@@ -1,5 +1,5 @@
 
-md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%")
+md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:100%")
 
   div( layout="column")
     md-toolbar
@@ -14,51 +14,102 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
           div(layout="row",class="md-toolbar-tools")
               h2(flex) Filters here...
       div(layout-margin,flex, layout="row")
-        .md-whiteframe-z2(flex)
-          md-toolbar(class=" md-accent", flex="25")
-            .md-toolbar-tools(layout="row")
-              h3(flex, layout-align="center center") Date
-              h3(flex, layout-align="center center") Sender
-              h3(flex, layout-align="center center") Scope
-              h3(flex, layout-align="center center") Concern
-              h3(flex, layout-align="center center") Actions
 
-          md-list(flex, style="max-height:700px;overflow:auto;")
-              md-list-item(layout="row" , class="md-3-line", ng-repeat="scope in scopes" , ng-click="selectScope(scope)")
-                  .md-list-item-text(flex) 12/12/12
-                  .md-list-item-text(flex) Employee1
-                  .md-list-item-text(flex) Finance
-                  .md-list-item-text(flex) Tax too high
-                  .md-list-item-text(flex) Assassinate
-                  md-divider
+
+        table(class="bordered hoverable")
+          thead
+            tr 
+              th Date
+              th Title
+              th Scope
+              th Concern
+              th actions
+          tbody
+            tr( ng-repeat="request in requests" , ng-click="selectRequest(request)")
+              td {{ request.createdAt | date :'MMM d, y   h:mm a' }}
+              td {{request.title}}
+              td {{request.scopeId.name}}
+              td {{request.concernId.name}}
+              td Gonna delete you
+        //- .md-whiteframe-z2(flex)
+        //-   md-toolbar(class=" md-accent", flex="25")
+        //-     .md-toolbar-tools(layout="row")
+        //-       h3(flex, layout-align="center center") Date
+        //-       h3(flex, layout-align="center center") Title
+        //-       h3(flex, layout-align="center center") Scope
+        //-       h3(flex, layout-align="center center") Concern
+        //-       h3(flex, layout-align="center center") Actions
+
+        //-   md-list(flex, style="max-height:700px;overflow:auto;")
+        //-       md-list-item(layout="row" , class="md-3-line", ng-repeat="request in requests" , ng-click="selectRequest(request)")
+        //-           .md-list-item-text(flex) {{ request.createdAt | date :'MMM d, y   h:mm a' }}
+        //-           .md-list-item-text(flex) {{request.title}}
+        //-           .md-list-item-text(flex) {{request.scopeId.name}}
+        //-           .md-list-item-text(flex) {{request.concernId.name}}
+        //-           .md-list-item-text(flex) Gonna delete you
+        //-           md-divider
                     
 
 
-      //- div(layout="row" layout-align="center center" flex="30")
-      //-   md-button(class="md-fab md-primary md-hue-2", ng-click="toAddScope()", aria-label="add scope")
-      //-     md-icon(md-svg-src="images/icons/add-white.svg")
+      div(layout="row" class="fixed-action-btn", style="right: 37px;bottom: 108px;", flex="30")
+        md-button(class="md-fab md-accent ", ng-click="toAddRequest()", aria-label="add scope")
+          md-icon(md-svg-src="images/icons/add-white.svg")
 
 
   md-sidenav.md-sidenav-right.md-whiteframe-z2(md-component-id='right', style="width:500px; max-width:none")
     md-toolbar.md-theme-light.md-primary.md-hue-3
       div.md-toolbar-tools
-        h2(ng-show="!toEdit") Add Scope
-        h2(ng-show="toEdit") Edit Scope
-    md-content(layout-padding='')
-      form(ng-if='!toEdit')
+        h2(ng-show="!toView") Send Request
+        div(ng-show="toView", layout="column") 
+          h2 {{selectedRequest.scopeId.name}} 
+          small {{selectedRequest.concernId.name}}
+        section(flex)
+        md-button.md-raised.green NEW
+      div.black-text(ng-if="toView")
+        md-card
+          md-card-content
+            h5.title {{selectedRequest.title}}
+            md-divider
+            h6 {{selectedRequest.createdAt | date :'MMM d, y   h:mm a' }}
+            p {{selectedRequest.description}}
+
+
+
+    md-content.container(layout-padding='', style="width:85%;min-width:100px;")
+      form(ng-if='!toView', name="RequestForm")
         md-input-container
-          label(for='testInput') Scope Name
-          input#testInput(required type='text', ng-model='addScopeForm.name', md-sidenav-focus='')
+          label Title
+          input(type="text" ng-model="addRequestForm.title" md-maxlength="30", required)
+
+        md-input-container
+          label Scope
+          md-select(ng-model="addRequestForm.scopeId",  required)
+            md-option(value="{{scope.id}}" ng-repeat="scope in scopes" , ng-click="selectScope(scope)") {{scope.name}} 
+
+        md-input-container
+          label Concern
+          md-select(ng-model="addRequestForm.concernId", required)
+            md-option(value="{name: 'general', scopeId:selectedScope.id}") General {{addRequestForm.scope.name}}
+            md-option(value="{{concern.id}}", ng-repeat="concern in scopeConcerns") {{concern.name}}
+
+        md-input-container
+          label Description
+          textarea(ng-model="addRequestForm.description", columns="1" md-maxlength="150")
+
+          //-input#testInput(required type='text', ng-model='addRequestForm.name', md-sidenav-focus='')
           //- input(type='submit' value='submit')
         div(layout='row' layout-align='center right')
-          md-button.md-raised.md-primary.md-primary.md-hue-2(ng-click='addScope()') ADD
-          md-button.md-primary(ng-click='close()') CANCEL
+          md-button.md-raised.md-primary.md-accent(flex, ng-click='addRequest()' ng-disabled="RequestForm.$invalid") ADD
+          md-button.md-primary(flex, ng-click='close()') CANCEL
 
-      form#editScopeForm(ng-show="toEdit")
-        md-input-container
-          label(for='ScopeName', style="font-size:1.5rem") Name
-          input#eScopeName(required , type='text', ng-model='editScopeForm.name', md-autofocus='')
-        div(layout="row",  layout-align="center right")
 
-          md-button.md-raised.md-primary.md-hue-2(ng-click='editScope()') EDIT
-          md-button.md-raised(ng-click='close()') CANCEL
+      
+
+      //- form#editScopeForm(ng-show="toView")
+      //-   md-input-container
+      //-     label(for='ScopeName', style="font-size:1.5rem") Name
+      //-     input#eScopeName(required , type='text', ng-model='editScopeForm.name', md-autofocus='')
+      //-   div(layout="row",  layout-align="center right")
+
+      //-     md-button.md-raised.md-primary.md-hue-2(ng-click='editScope()') EDIT
+      //-     md-button.md-raised(ng-click='close()') CANCEL

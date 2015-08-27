@@ -29,12 +29,12 @@ app.config([ "$routeProvider", "$locationProvider", "$httpProvider","$sceDelegat
 
 
     $routeProvider
-    .when '/concernssss',
+    .when '/',
       # template: 'wawa'
       templateUrl: 'templates/administrator/admin/admin.html'
       # template: JST["superuser/super/super.html"]()
       controller: 'AdminCtrl'
-    .when '/',
+    .when '/concern',
       # template: 'wawa'
       templateUrl: 'templates/administrator/admin/concern.html'
       # template: JST["superuser/super/super.html"]()

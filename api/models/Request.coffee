@@ -7,12 +7,17 @@ module.exports =
   adapter: 'mongo'
   attributes:
 
-    name:
+    title:
       type: 'string'
       defaultsTo: ''
     description:
       type: 'string'
       defaultsTo: ''
+
+    scopeId:
+      type: 'integer'
+      model: 'Scope'
+
     statusId:
       type: 'integer'
       model: 'Status'
@@ -23,7 +28,6 @@ module.exports =
 
     userId:
       type: 'integer'
-      model: 'User'
 
     comments:
       collection: 'comment'
