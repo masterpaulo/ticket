@@ -18,14 +18,20 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
 
         table(class="bordered hoverable")
           thead
-            tr 
-              th Date
-              th Title
-              th Scope
-              th Concern
-              th actions
+            tr
+              th
+                a(href='', ng-click="reverse=!reverse;order('createdAt', reverse)") Date
+
+              th
+                a(href='', ng-click="reverse=!reverse;order('title', reverse)") Title
+              th
+                a(href='', ng-click="reverse=!reverse;order('scopeId.name', reverse)") Scope
+              th
+                a(href='', ng-click="reverse=!reverse;order('concernId.name', reverse)") Concern
+              th
+                a(href='', ng-click="reverse=!reverse;order('title', reverse)") Actions
           tbody
-            tr( ng-repeat="request in requests" , ng-click="selectRequest(request)")
+            tr( ng-repeat="request in requests " , ng-click="selectRequest(request)")
               td {{ request.createdAt | date :'MMM d, y   h:mm a' }}
               td {{request.title}}
               td {{request.scopeId.name}}
@@ -48,7 +54,7 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
         //-           .md-list-item-text(flex) {{request.concernId.name}}
         //-           .md-list-item-text(flex) Gonna delete you
         //-           md-divider
-                    
+
 
 
       div(layout="row" class="fixed-action-btn", style="right: 37px;bottom: 108px;", flex="30")
@@ -60,8 +66,8 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
     md-toolbar.md-theme-light.md-primary.md-hue-3
       div.md-toolbar-tools
         h2(ng-show="!toView") Send Request
-        div(ng-show="toView", layout="column") 
-          h2 {{selectedRequest.scopeId.name}} 
+        div(ng-show="toView", layout="column")
+          h2 {{selectedRequest.scopeId.name}}
           small {{selectedRequest.concernId.name}}
         section(flex)
         md-button.md-raised.green NEW
@@ -84,7 +90,7 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
         md-input-container
           label Scope
           md-select(ng-model="addRequestForm.scopeId",  required)
-            md-option(value="{{scope.id}}" ng-repeat="scope in scopes" , ng-click="selectScope(scope)") {{scope.name}} 
+            md-option(value="{{scope.id}}" ng-repeat="scope in scopes" , ng-click="selectScope(scope)") {{scope.name}}
 
         md-input-container
           label Concern
@@ -103,7 +109,7 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
           md-button.md-primary(flex, ng-click='close()') CANCEL
 
 
-      
+
 
       //- form#editScopeForm(ng-show="toView")
       //-   md-input-container

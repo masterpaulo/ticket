@@ -2,7 +2,14 @@
 
 
 
-app.controller 'EmployeeCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory) ->
+app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory) ->
+
+  # $scope.predicate = 'createdAt'
+  # $scope.reverse = true
+  # $scope.order = (predicate) ->
+  #   $scope.reverse = if $scope.predicate == predicate then !$scope.reverse else false
+  #   $scope.predicate = predicate
+
 
   $scope.users = []
   $scope.userSearch = ''
@@ -18,6 +25,8 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, 
   $scope.editScopeForm = {}
   $scope.selected = false
   $scope.userId = 0
+
+
 
 
 
@@ -43,10 +52,10 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, 
       (err) ->
         console.log err
     )
-    
 
 
-  
+
+
 
   buildToggler = (navID) ->
     debounceFn = $mdUtil.debounce((->
@@ -69,7 +78,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, 
     console.log scope
     $scope.selectedScope = scope
     $scope.scopeConcerns = scope.concerns
-    return 
+    return
 
   $scope.toAddRequest = (event, err) ->
     if err
@@ -107,15 +116,15 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, 
         console.log err
     )
 
-    
 
-  
+
+
 
   $scope.toViewRequest = (event, err) ->
     if err
       console.log errRes
       return
-    
+
     $scope.editScopeForm.name = $scope.selectedRequest.name
     $scope.toView = true
 
@@ -167,9 +176,9 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, 
         #console.log $scope.adminIds #list of admin ids of scopes for validation purposes
         return
     )
-    
 
-    
+
+
 
     return
 
@@ -199,7 +208,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, 
         console.log errRes
         return
     )
-    
+
     return
 
 
@@ -212,7 +221,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, 
       (errRes) ->
         console.log errRes
     )
-    
+
 
     return
   $scope.searchUser = ->
@@ -284,7 +293,12 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, 
     return
 
 
+  orderBy = $filter('orderBy')
+  # $scope.requests = Request
+  $scope.order = (predicate, reverse) ->
+    $scope.requests = orderBy($scope.requests, predicate, reverse)
 
+  $scope.order('-createAt',false)
 
 
 
