@@ -17,11 +17,16 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
         .md-whiteframe-z2(flex)
           md-toolbar(class=" md-accent", flex="25")
             .md-toolbar-tools(layout="row")
-              h3(flex, layout-align="center center") Date
-              h3(flex, layout-align="center center") Sender
-              h3(flex, layout-align="center center") Title
-              h3(flex, layout-align="center center") Scope
-              h3(flex, layout-align="center center") Concern
+              h3(flex, layout-align="center center")
+                a(href='', ng-click="reverse=!reverse;order('createdAt', reverse)") Date
+              h3(flex, layout-align="center center")
+                a(href='', ng-click="reverse=!reverse;order('userId', reverse)") Sender
+              h3(flex, layout-align="center center")
+                a(href='', ng-click="reverse=!reverse;order('title', reverse)") Title
+              h3(flex, layout-align="center center")
+                a(href='', ng-click="reverse=!reverse;order('scopeId.name', reverse)") Scope
+              h3(flex, layout-align="center center")
+                a(href='', ng-click="reverse=!reverse;order('concernId.name', reverse)") Concern
               h3(flex, layout-align="center center") Actions
 
           md-list(flex, style="max-height:700px;overflow:auto;")
@@ -33,9 +38,9 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
                   .md-list-item-text(flex) {{request.concernId.name}}
                   .md-list-item-text(flex) Gonna delete you
                   md-divider
-                    
 
- 
+
+
       //- div(layout="row" layout-align="center center" flex="30")
       //-   md-button(class="md-fab md-primary md-hue-2", ng-click="toAddScope()", aria-label="add scope")
       //-     md-icon(md-svg-src="images/icons/add-white.svg")
@@ -44,8 +49,8 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
   md-sidenav.md-sidenav-right.md-whiteframe-z2(md-component-id='right', style="width:500px; max-width:none")
     md-toolbar.md-theme-light.md-primary.md-hue-3
       div.md-toolbar-tools
-        div( layout="column") 
-          h2 {{selectedRequest.scopeId.name}} 
+        div( layout="column")
+          h2 {{selectedRequest.scopeId.name}}
           small {{selectedRequest.concernId.name}}
         section(flex)
         md-button.md-raised.green NEW

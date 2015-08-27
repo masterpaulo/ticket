@@ -298,7 +298,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
   $scope.order = (predicate, reverse) ->
     $scope.requests = orderBy($scope.requests, predicate, reverse)
 
-  $scope.order('-createAt',false)
+  $scope.order('createAt',false)
 
 
 

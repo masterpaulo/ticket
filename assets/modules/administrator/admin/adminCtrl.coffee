@@ -2,7 +2,7 @@
 
 
 
-app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory) ->
+app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter,$http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory) ->
   $scope.scopes = []
   $scope.users = []
   $scope.userSearch = ''
@@ -21,7 +21,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
 #========================
 
   $scope.requests = []
-  
+
 
 
   USER = new ApiObject "appuser"
@@ -87,7 +87,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
 
     return
 
-    
+
 
   $scope.refresh = () ->
     $scope.scopes = ScopeFactory.query();
@@ -238,6 +238,14 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
     return
 
 
+
+
+  orderBy = $filter('orderBy')
+  # $scope.requests = Request
+  $scope.order = (predicate, reverse) ->
+    $scope.requests = orderBy($scope.requests, predicate, reverse)
+
+  $scope.order('createAt',false)
 
 
 
