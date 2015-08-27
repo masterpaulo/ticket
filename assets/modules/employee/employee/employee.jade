@@ -8,19 +8,17 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
           md-icon(md-svg-icon="images/icons/menu.svg")
         h2 Requests
 
-  div(layout="column", flex)
-    div(flex, layout="column" )
-      md-toolbar( flex="25")
-          div(layout="row",class="md-toolbar-tools")
-              h2(flex=30)
-                md-input-container
-                  label Search
-                  input(ng-model='search')
+  div(layout="row", flex)
+    div(flex, layout="column", style="background-color:#F7F7F7" )
+      div(layout='row')
+        div(flex='70')
+        md-input-container(md-no-float )
+          input(ng-model='search' placeholder='SEARCH')
       div(layout-margin,flex, layout="row")
 
 
         table(class="bordered hoverable")
-          thead
+          thead(style='background-color:#007071')
             tr
               th
                 a(href='', ng-click="reverse=!reverse;order('createdAt', reverse)") Date
@@ -40,24 +38,6 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
               td {{request.scopeId.name}}
               td {{request.concernId.name}}
               td Gonna delete you
-        //- .md-whiteframe-z2(flex)
-        //-   md-toolbar(class=" md-accent", flex="25")
-        //-     .md-toolbar-tools(layout="row")
-        //-       h3(flex, layout-align="center center") Date
-        //-       h3(flex, layout-align="center center") Title
-        //-       h3(flex, layout-align="center center") Scope
-        //-       h3(flex, layout-align="center center") Concern
-        //-       h3(flex, layout-align="center center") Actions
-
-        //-   md-list(flex, style="max-height:700px;overflow:auto;")
-        //-       md-list-item(layout="row" , class="md-3-line", ng-repeat="request in requests" , ng-click="selectRequest(request)")
-        //-           .md-list-item-text(flex) {{ request.createdAt | date :'MMM d, y   h:mm a' }}
-        //-           .md-list-item-text(flex) {{request.title}}
-        //-           .md-list-item-text(flex) {{request.scopeId.name}}
-        //-           .md-list-item-text(flex) {{request.concernId.name}}
-        //-           .md-list-item-text(flex) Gonna delete you
-        //-           md-divider
-
 
 
       div(layout="row" class="fixed-action-btn", style="right: 37px;bottom: 108px;", flex="30")
@@ -98,15 +78,12 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
         md-input-container
           label Concern
           md-select(ng-model="addRequestForm.concernId", required)
-            md-option(value="{name: 'general', scopeId:selectedScope.id}") General {{addRequestForm.scope.name}}
             md-option(value="{{concern.id}}", ng-repeat="concern in scopeConcerns") {{concern.name}}
 
         md-input-container
           label Description
           textarea(ng-model="addRequestForm.description", columns="1" md-maxlength="150")
 
-          //-input#testInput(required type='text', ng-model='addRequestForm.name', md-sidenav-focus='')
-          //- input(type='submit' value='submit')
         div(layout='row' layout-align='center right')
           md-button.md-raised.md-primary.md-accent(flex, ng-click='addRequest()' ng-disabled="RequestForm.$invalid") ADD
           md-button.md-primary(flex, ng-click='close()') CANCEL
