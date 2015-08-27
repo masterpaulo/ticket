@@ -54,16 +54,23 @@ md-content(flex, layout="column", ng-controller="StatusCtrl", style="height:100%
             md-button(ng-show="selected", class="md-icon-button ", aria-label="edit button", ng-click="toAddStatus()")
               md-icon(md-svg-src="images/icons/add-white.svg")
 
-        md-list.md-whiteframe-z1.white(style="max-height:600px")
-          md-list-item(layout-padding ng-if="selectedScope.status.length" , class="md-3-line", ng-repeat="status in selectedScope.status", ng-click="")
-            h5(flex) {{status.name}}
-            md-button.md-icon-button.md-warn(ng-click="toEditStatus(status)", aria-label="edit status")
-              md-icon(md-svg-icon="images/icons/edit.svg")
-            md-divider(ng-if="!$last")
+        md-radio-group(ng-model="defaultStatus", class="md-primary", ng-change="setDefaultStatus(defaultStatus)")
+          md-list.md-whiteframe-z1.white(style="max-height:600px")
+            md-list-item(layout-padding ng-if="selectedScope.status.length" , class="md-3-line", ng-repeat="status in selectedScope.status", ng-click="", layout-align="center center")
+              md-radio-button(aria-label="status.name radio button" , ng-value="status.id") 
 
-          md-list-item(ng-hide="selectedScope.status && selectedScope.status.length")
-            h5 No Status set for this Scope.
 
+    
+
+              h5(flex) {{status.name}}
+              md-button.md-icon-button.md-warn(ng-click="toEditStatus(status)", aria-label="edit status")
+                md-icon(md-svg-icon="images/icons/edit.svg")
+              md-divider(ng-if="!$last")
+
+            md-list-item(ng-hide="selectedScope.status && selectedScope.status.length")
+              h5 No Status set for this Scope.
+            div(layout-margin)
+              h6 Scope Default Status : {{selectedScope.defaultStatus || 'please select default status'}}
     div(layout='row', style='height:500px;')
       section(layout='row', flex='')
 

@@ -12,6 +12,8 @@ module.exports =
       defaultsTo: ''
       unique: true
 
+
+
     admins:
       collection: 'admin'
       via: 'scopeId'
@@ -25,3 +27,7 @@ module.exports =
       via: 'scopeId'
 
 
+    defaultStatus:
+      type: "integer"
+      model: 'Status'
+      defaultsTo: null

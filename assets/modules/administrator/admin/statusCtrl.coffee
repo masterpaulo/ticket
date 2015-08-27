@@ -8,6 +8,7 @@ app.controller 'StatusCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $m
   $scope.userSearch = ''
   $scope.search = ''
   $scope.scopes = []
+  $scope.userId = ""
 
   $scope.addStatusForm = {}
   $scope.selectedScope = null
@@ -26,6 +27,7 @@ app.controller 'StatusCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $m
   .success (user)->
     #$scope.activeUser = user.appuser
     userId = user.appuser
+    $scope.userId = userId
     scopeAdministered = []
     administer = AdminFactory.query(
       {userId: userId},
@@ -72,6 +74,22 @@ app.controller 'StatusCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $m
       return
     return
 
+  $scope.fillScopeList = () ->
+    userId = $scope.userId 
+    scopeAdministered = []
+    administer = AdminFactory.query(
+      {userId: userId},
+      (successRes) ->
+        #console.log administer
+        administer.forEach (admin, i) ->
+          scopeAdministered.push admin.scopeId
+        $scope.scopes = scopeAdministered
+      ,
+      (errRes) ->
+        console.log errRes
+    )
+    return
+
 
   $scope.toAddStatus = (event, err) ->
     if err
@@ -114,6 +132,19 @@ app.controller 'StatusCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $m
 
 
     )
+
+  $scope.setDefaultStatus = (defaultStatus) ->
+    console.log defaultStatus
+    scopeId = $scope.selectedScope.id
+    ScopeFactory.get {id: scopeId}, (saveScope) ->
+      saveScope.defaultStatus = defaultStatus
+      saveScope.$save (success) ->
+        console.log success
+        $scope.selectedScope = success
+        $scope.fillScopeList()
+
+
+    return 
 
   $scope.deleteStatus = (event, err) ->
     console.log "going to delete you ...."
@@ -168,8 +199,11 @@ app.controller 'StatusCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $m
 
 
   $scope.selectScope = (scope) ->
+    console.log scope
     $scope.selected = true
     $scope.selectedScope = scope
+    $scope.defaultStatus = scope.defaultStatus 
+    console.log $scope.defaultStatus
     #console.log 'selected scope : ' + $scope.selectedScope.name
     $scope.fillStatusList()
     return

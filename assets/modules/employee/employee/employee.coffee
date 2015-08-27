@@ -99,7 +99,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
 
     #console.log $scope.addRequestForm
     newRequest = $scope.addRequestForm
-    newRequest.statusId = {name: "new", scopeId:newRequest.scopeId}
+    newRequest.statusId = $scope.selectedRequest.defaultStatus
     newRequest.userId = $scope.userId
 
     console.log newRequest
@@ -155,75 +155,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
 
 
 
-  $scope.fillAdminList = () ->
-    #console.log $scope.selectedRequest # check selected scope
-    $scope.adminIds = []
-    test = ScopeFactory.get(
-      {id: $scope.selectedRequest.id},
-      (successRes) ->
-        $scope.selectedRequest.admins = test.admins
-        $scope.selectedRequest.admins.forEach (admin, i) ->
-          userId = admin.userId
-          $scope.adminIds.push userId
-          USER.find({id:userId})
-          .populate('profileId')
-          .exec (err,data) ->
-            #console.log data
-            if data.length > -1
-              appuser = data[0].profileId
-              $scope.selectedRequest.admins[i].name = appuser.firstName + " " + appuser.lastName
-            return
-        #console.log $scope.adminIds #list of admin ids of scopes for validation purposes
-        return
-    )
 
-
-
-
-    return
-
-  $scope.adminExist = (user) ->
-    if ($scope.adminIds.indexOf user.id) > -1
-      return true
-    else
-      return false
-
-  $scope.addAdmin = (user, scope) ->
-    console.log user.id
-    console.log scope.id
-    $scope.search = ""
-    data = {
-      scopeId: scope.id
-      userId: user.id
-    }
-    #$scope.ggNames.push user.profileId.firstName
-    AdminFactory.save(
-      data,
-      (successRes) ->
-        console.log successRes
-        $scope.fillAdminList()
-        return
-      ,
-      (errRes) ->
-        console.log errRes
-        return
-    )
-
-    return
-
-
-  $scope.deleteAdmin = (adminId) ->
-    console.log "deleting admin : " + adminId
-    console.log AdminFactory.delete({id:adminId},
-      (successRes) ->
-        $scope.fillAdminList()
-      ,
-      (errRes) ->
-        console.log errRes
-    )
-
-
-    return
   $scope.searchUser = ->
     reset = false
     doReset = ->
