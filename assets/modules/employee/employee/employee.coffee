@@ -125,7 +125,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
       console.log errRes
       return
 
-    $scope.editScopeForm.name = $scope.selectedRequest.name
+
     $scope.toView = true
 
     $scope.toggleRight()
