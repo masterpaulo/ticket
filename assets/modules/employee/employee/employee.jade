@@ -8,11 +8,14 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
           md-icon(md-svg-icon="images/icons/menu.svg")
         h2 Requests
 
-  div(layout="row", flex)
-    div(flex, layout="column", style="background-color:#F7F7F7" )
-      md-toolbar(class=" md-hue-3", flex="25")
+  div(layout="column", flex)
+    div(flex, layout="column" )
+      md-toolbar( flex="25")
           div(layout="row",class="md-toolbar-tools")
-              h2(flex) Filters here...
+              h2(flex=30)
+                md-input-container
+                  label Search
+                  input(ng-model='search')
       div(layout-margin,flex, layout="row")
 
 
@@ -31,7 +34,7 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
               th
                 a(href='', ng-click="reverse=!reverse;order('title', reverse)") Actions
           tbody
-            tr( ng-repeat="request in requests " , ng-click="selectRequest(request)")
+            tr( ng-repeat="request in requests | filter:search" , ng-click="selectRequest(request)")
               td {{ request.createdAt | date :'MMM d, y   h:mm a' }}
               td {{request.title}}
               td {{request.scopeId.name}}
