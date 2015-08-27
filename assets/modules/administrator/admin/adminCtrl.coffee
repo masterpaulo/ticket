@@ -26,7 +26,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
   USERROLE = new ApiObject "userrole"
 
 
-  
+
 
   buildToggler = (navID) ->
     $scope.addScopeForm.name =''
@@ -65,11 +65,11 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
       return
 
     newScope = $scope.addScopeForm
-    
+
 
     sample = ScopeFactory.query(
-      {name:newScope.name}, 
-      (successRes)-> 
+      {name:newScope.name},
+      (successRes)->
         if sample.length > 0
           console.log "Name already exists"
         else
@@ -90,20 +90,20 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
 
         return
     )
-    
-    
 
 
 
-    
 
-  
+
+
+
+
 
   $scope.toEditScope = (event, err) ->
     if err
       console.log errRes
       return
-    
+
     $scope.editScopeForm.name = $scope.selectedScope.name
     $scope.toEdit = true
 
@@ -170,9 +170,9 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
         #console.log $scope.adminIds #list of admin ids of scopes for validation purposes
         return
     )
-    
 
-    
+
+
 
     return
 
@@ -202,7 +202,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
         console.log errRes
         return
     )
-    
+
     return
 
 
@@ -215,7 +215,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
       (errRes) ->
         console.log errRes
     )
-    
+
 
     return
   $scope.searchUser = ->

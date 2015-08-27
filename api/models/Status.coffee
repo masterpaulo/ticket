@@ -13,7 +13,7 @@ module.exports =
 
     scopeId:
       type: 'integer'
-      model: 'Scope'
+      model: 'scope'
 
     requests:
       collection: 'request'

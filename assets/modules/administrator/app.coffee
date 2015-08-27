@@ -21,7 +21,7 @@ app.config([ "$routeProvider", "$locationProvider", "$httpProvider","$sceDelegat
       # 'hue-1': '500', # use shade 100 for the <code>md-hue-1</code> class
       # 'hue-2': '600', # use shade 600 for the <code>md-hue-2</code> class
       # 'hue-3': '700' # use shade A100 for the <code>md-hue-3</code> class
-    
+
     }
     .warnPalette('pink');
 
@@ -29,18 +29,24 @@ app.config([ "$routeProvider", "$locationProvider", "$httpProvider","$sceDelegat
 
 
     $routeProvider
-    .when '/concernssss',
+    .when '/admin',
       # template: 'wawa'
       templateUrl: 'templates/administrator/admin/admin.html'
       # template: JST["superuser/super/super.html"]()
       controller: 'AdminCtrl'
-    .when '/',
+    .when '/concern',
       # template: 'wawa'
       templateUrl: 'templates/administrator/admin/concern.html'
       # template: JST["superuser/super/super.html"]()
       controller: 'ConcernCtrl'
 
-    # .otherwise redirectTo: '/'
+    .when '/',
+      # template: 'wawa'
+      templateUrl: 'templates/administrator/admin/status.html'
+      # template: JST["superuser/super/super.html"]()
+      controller: 'StatusCtrl'
+
+    .otherwise redirectTo: '/'
 
     apiConfig =
       api: "http://api.meditab.com"

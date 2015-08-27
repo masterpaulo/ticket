@@ -77,7 +77,7 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
           saveScope = ScopeFactory.save(
             newScope,
             (successRes) ->
-              $scope.scopes.push $scope.addScopeForm
+              $scope.scopes.push newScope
               $scope.close()
               $scope.addScopeForm = {}
               $scope.refresh()
