@@ -185,6 +185,7 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
   $scope.addAdmin = (user, scope) ->
     # console.log user.id
     # console.log scope.id
+    console.log '--ADDING ADMIN--'
     $scope.search = ""
     admin =
       scopeId: scope.id
@@ -197,14 +198,19 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
     AdminFactory.save(
       admin,
       (successRes) ->
-        console.log successRes
-        USERROLE.create roleObject
-        .exec (err,data) ->
-          if err
-            console.log 'adding userrole failed'
-          if data
-            console.log 'success adding userrole'
-            console.log JSON.stringify data
+        USERROLE.find(roleObject)
+        .exec (err,data)->
+          if data.length is 0
+            USERROLE.create roleObject
+            .exec (err,data) ->
+              if err
+                console.log 'adding userrole failed'
+              if data
+                console.log 'success adding new userrole'
+
+          else
+            console.log 'already exist userrole'
+          console.log 'success adding admin'
         $scope.fillAdminList()
         return
       ,
@@ -217,33 +223,48 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
 
 
   $scope.deleteAdmin = (adminId) ->
+    console.log '--DELETING ADMIN--'
     # console.log "deleting admin : " + adminId
     # console.log @admin.userId
-    USERROLE.find({roleId:33,appuserId: @admin.userId})
-    .exec (err, data) ->
-      if err
-        console.log 'dont exist'
-      if data
-
-        approleId = data[0].id
-        USERROLE.delete(approleId)
-        .exec (err,data) ->
-          if err
-            console.log 'error deleting'
-          if data
-            console.log 'success deleting' + data.id
+    userId = @admin.userId
 
 
 
-    AdminFactory.delete({id:adminId},
+    AdminFactory.query({userId: userId},
       (successRes) ->
-        $scope.fillAdminList()
-        console.log "deleting admin"
+        console.log successRes.length
+        if successRes.length is 1
+          USERROLE.find({roleId: 33, appuserId: userId})
+          .exec (err, data) ->
+            if data
+              approleId = data[0].id
+              USERROLE.delete(approleId)
+              .exec (err,data) ->
+                if err
+                  console.log 'error deleting'
+                if data
+                  console.log 'success deleting userrole'
+            else
+              console.log 'dont exist in the userrole dbs'
+        else
+          console.log 'not allowed to delete userrole coz user has more than 1 admin rights'
 
-      ,
+        AdminFactory.delete({id:adminId},
+          (successRes) ->
+            console.log 'success deleting admin'
+            $scope.fillAdminList()
+
+          ,
+          (errRes) ->
+            console.log errRes
+        )
+
       (errRes) ->
         console.log errRes
-    )
+      )
+
+
+
 
 
     return
