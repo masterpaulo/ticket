@@ -33,7 +33,7 @@ app.config([ "$routeProvider", "$locationProvider", "$httpProvider","$sceDelegat
       # template: 'wawa'
       templateUrl: 'templates/employee/employee/employee.html'
       # template: JST["superuser/super/super.html"]()
-      controller: 'AdminCtrl'
+      controller: 'EmployeeCtrl'
 
 
     apiConfig =

@@ -2,21 +2,23 @@
 
 
 
-app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory) ->
-  $scope.scopes = []
+app.controller 'EmployeeCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory) ->
+
   $scope.users = []
   $scope.userSearch = ''
   $scope.search = ''
-  $scope.scopes = []
-  $scope.scopes = ScopeFactory.query();
+  $scope.requests = []
+  $scope.scopes = ScopeFactory.query()
 
-  $scope.addScopeForm = {}
-  $scope.selectedScope = null
+  $scope.selectedScope = {}
+  $scope.scopeConcerns = []
+
+  $scope.addRequestForm = {}
+  $scope.selectedRequest = null
   $scope.editScopeForm = {}
   $scope.selected = false
+  $scope.userId = 0
 
-  $scope.adminIds = []
-  $scope.scopes = ScopeFactory.query();
 
 
   USER = new ApiObject "appuser"
@@ -26,10 +28,27 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
   USERROLE = new ApiObject "userrole"
 
 
+
+  $http.get "/session/check"
+  .success (user)->
+    #$scope.activeUser = user.appuser
+    $scope.userId = user.appuser
+    userId = user.appuser
+    userRequests = []
+    requests = RequestFactory.query(
+      {userId: userId},
+      (success) ->
+        $scope.requests = requests
+      ,
+      (err) ->
+        console.log err
+    )
+    
+
+
   
 
   buildToggler = (navID) ->
-    $scope.addScopeForm.name =''
     debounceFn = $mdUtil.debounce((->
       $mdSidenav(navID).toggle().then ->
         $log.debug 'toggle ' + navID + ' is done'
@@ -46,66 +65,59 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
       return
     return
 
+  $scope.selectScope = (scope) ->
+    console.log scope
+    $scope.selectedScope = scope
+    $scope.scopeConcerns = scope.concerns
+    return 
 
-  $scope.toAddScope = (event, err) ->
+  $scope.toAddRequest = (event, err) ->
     if err
       console.log err
       return
 
     # console.log event
     # console.log err
-    # $scope.addScopeForm.name = ''
-    $scope.toEdit = false
+    # $scope.addRequestForm.name = ''
+    $scope.toView = false
     $scope.toggleRight()
 
-  $scope.addScope = (event, err) ->
+  $scope.addRequest = (event, err) ->
 
     if err
       console.log err
       return
 
-    newScope = $scope.addScopeForm
-    
+    #console.log $scope.addRequestForm
+    newRequest = $scope.addRequestForm
+    newRequest.statusId = {name: "new", scopeId:newRequest.scopeId}
+    newRequest.userId = $scope.userId
 
-    sample = ScopeFactory.query(
-      {name:newScope.name}, 
-      (successRes)-> 
-        if sample.length > 0
-          console.log "Name already exists"
-        else
-          console.log "Scope added"
-          saveScope = ScopeFactory.save(
-            newScope,
-            (successRes) ->
-              $scope.scopes.push $scope.addScopeForm
-              $scope.close()
-              $scope.addScopeForm = {}
-              $scope.refresh()
-              return
-            ,
-            (errRes) ->
-              console.log errRes
-              return
-          )
+    console.log newRequest
 
-        return
+    saveRequest = RequestFactory.save(
+      newRequest,
+      (successRes) ->
+        console.log successRes
+        $scope.fillRequestList()
+        $scope. addRequestForm = {}
+        $scope.close()
+      ,
+      (err) ->
+        console.log err
     )
-    
-    
-
-
 
     
 
   
 
-  $scope.toEditScope = (event, err) ->
+  $scope.toViewRequest = (event, err) ->
     if err
       console.log errRes
       return
     
-    $scope.editScopeForm.name = $scope.selectedScope.name
-    $scope.toEdit = true
+    $scope.editScopeForm.name = $scope.selectedRequest.name
+    $scope.toView = true
 
     $scope.toggleRight()
 
@@ -114,49 +126,34 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
     return
 
 
-  $scope.editScope = (event, err) ->
-    if err
-      console.log err
-      return
-
-    # console.log event
-    # console.log err
-    scopeId = $scope.selectedScope.id
-    newScope = $scope.editScopeForm
-    ScopeFactory.get { id: scopeId }, (saveScope) ->
-      saveScope.name = newScope.name
-      saveScope.$save ()->
-        $scope.refresh();
-
-      $scope.selectedScope = saveScope
-      $scope.close()
-
-
-    $scope.toEdit = false
-    $scope.editScopeForm = {}
-    $scope.refresh()
-
+  $scope.fillRequestList = () ->
+    #$scope.requests = RequestFactory.query();
+    requests = RequestFactory.query(
+      {userId: $scope.userId},
+      (success) ->
+        $scope.requests = requests
+      ,
+      (err) ->
+        console.log err
+    )
     return
 
-  $scope.refresh = () ->
-    $scope.scopes = ScopeFactory.query();
-    return
-
-  $scope.selectScope = (scope) ->
+  $scope.selectRequest = (request) ->
     $scope.selected = true
-    $scope.selectedScope = scope
-    #console.log 'selected scope : ' + $scope.selectedScope.name
-    $scope.fillAdminList()
+    $scope.selectedRequest = request
+    $scope.toViewRequest()
     return
+
+
 
   $scope.fillAdminList = () ->
-    #console.log $scope.selectedScope # check selected scope
+    #console.log $scope.selectedRequest # check selected scope
     $scope.adminIds = []
     test = ScopeFactory.get(
-      {id: $scope.selectedScope.id},
+      {id: $scope.selectedRequest.id},
       (successRes) ->
-        $scope.selectedScope.admins = test.admins
-        $scope.selectedScope.admins.forEach (admin, i) ->
+        $scope.selectedRequest.admins = test.admins
+        $scope.selectedRequest.admins.forEach (admin, i) ->
           userId = admin.userId
           $scope.adminIds.push userId
           USER.find({id:userId})
@@ -165,7 +162,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
             #console.log data
             if data.length > -1
               appuser = data[0].profileId
-              $scope.selectedScope.admins[i].name = appuser.firstName + " " + appuser.lastName
+              $scope.selectedRequest.admins[i].name = appuser.firstName + " " + appuser.lastName
             return
         #console.log $scope.adminIds #list of admin ids of scopes for validation purposes
         return
@@ -310,6 +307,14 @@ app.factory 'AdminFactory' , [
   ($resource) ->
     $resource '/admin/:id', {id:'@id'} ,
 ]
+
+
+app.factory 'RequestFactory' , [
+  '$resource'
+  ($resource) ->
+    $resource '/request/:id', {id:'@id'} ,
+]
+
 
 
 

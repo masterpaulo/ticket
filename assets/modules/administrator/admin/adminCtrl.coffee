@@ -2,7 +2,7 @@
 
 
 
-app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory) ->
+app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory) ->
   $scope.scopes = []
   $scope.users = []
   $scope.userSearch = ''
@@ -18,13 +18,17 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
   $scope.adminIds = []
   $scope.scopes = ScopeFactory.query();
 
+#========================
+
+  $scope.requests = []
+  
+
 
   USER = new ApiObject "appuser"
   PROFILE = new ApiObject "profile"
   COMPANY = new ApiObject "company"
   APPS = new ApiObject "token"
   USERROLE = new ApiObject "userrole"
-
 
 
 
@@ -47,65 +51,35 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
     return
 
 
-  $scope.toAddScope = (event, err) ->
-    if err
-      console.log err
-      return
-
-    # console.log event
-    # console.log err
-    # $scope.addScopeForm.name = ''
-    $scope.toEdit = false
-    $scope.toggleRight()
-
-  $scope.addScope = (event, err) ->
-
-    if err
-      console.log err
-      return
-
-    newScope = $scope.addScopeForm
-
-
-    sample = ScopeFactory.query(
-      {name:newScope.name},
-      (successRes)->
-        if sample.length > 0
-          console.log "Name already exists"
-        else
-          console.log "Scope added"
-          saveScope = ScopeFactory.save(
-            newScope,
-            (successRes) ->
-              $scope.scopes.push $scope.addScopeForm
-              $scope.close()
-              $scope.addScopeForm = {}
-              $scope.refresh()
-              return
-            ,
-            (errRes) ->
-              console.log errRes
-              return
-          )
-
-        return
+  $scope.fillRequestList = () ->
+    #$scope.requests = RequestFactory.query();
+    requests = RequestFactory.query(
+      (success) ->
+        $scope.requests = requests
+      ,
+      (err) ->
+        console.log err
     )
+    return
+
+  $scope.fillRequestList()
+
+
+  $scope.selectRequest = (request) ->
+    $scope.selected = true
+    $scope.selectedRequest = request
+    $scope.toViewRequest()
+    return
 
 
 
-
-
-
-
-
-
-  $scope.toEditScope = (event, err) ->
+  $scope.toViewRequest = (event, err) ->
     if err
       console.log errRes
       return
 
-    $scope.editScopeForm.name = $scope.selectedScope.name
-    $scope.toEdit = true
+    $scope.editScopeForm.name = $scope.selectedRequest.name
+    $scope.toView = true
 
     $scope.toggleRight()
 
@@ -113,30 +87,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
 
     return
 
-
-  $scope.editScope = (event, err) ->
-    if err
-      console.log err
-      return
-
-    # console.log event
-    # console.log err
-    scopeId = $scope.selectedScope.id
-    newScope = $scope.editScopeForm
-    ScopeFactory.get { id: scopeId }, (saveScope) ->
-      saveScope.name = newScope.name
-      saveScope.$save ()->
-        $scope.refresh();
-
-      $scope.selectedScope = saveScope
-      $scope.close()
-
-
-    $scope.toEdit = false
-    $scope.editScopeForm = {}
-    $scope.refresh()
-
-    return
+    
 
   $scope.refresh = () ->
     $scope.scopes = ScopeFactory.query();
@@ -310,6 +261,16 @@ app.factory 'AdminFactory' , [
   ($resource) ->
     $resource '/admin/:id', {id:'@id'} ,
 ]
+
+
+app.factory 'RequestFactory' , [
+  '$resource'
+  ($resource) ->
+    $resource '/request/:id', {id:'@id'} ,
+]
+
+
+
 
 
 

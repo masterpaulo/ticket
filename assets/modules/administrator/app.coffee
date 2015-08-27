@@ -29,7 +29,8 @@ app.config([ "$routeProvider", "$locationProvider", "$httpProvider","$sceDelegat
 
 
     $routeProvider
-    .when '/admin',
+
+    .when '/',
       # template: 'wawa'
       templateUrl: 'templates/administrator/admin/admin.html'
       # template: JST["superuser/super/super.html"]()
@@ -40,7 +41,7 @@ app.config([ "$routeProvider", "$locationProvider", "$httpProvider","$sceDelegat
       # template: JST["superuser/super/super.html"]()
       controller: 'ConcernCtrl'
 
-    .when '/',
+    .when '/status',
       # template: 'wawa'
       templateUrl: 'templates/administrator/admin/status.html'
       # template: JST["superuser/super/super.html"]()
