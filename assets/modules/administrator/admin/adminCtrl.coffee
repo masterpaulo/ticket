@@ -85,6 +85,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
       (success) ->
         #console.log requests
         $scope.requests = requests
+        $scope.requests.reverse()
       ,
       (err) ->
         console.log err

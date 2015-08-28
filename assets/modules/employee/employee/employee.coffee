@@ -2,7 +2,7 @@
 
 
 
-app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory) ->
+app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory,CommentFactory) ->
 
   # $scope.predicate = 'createdAt'
   # $scope.reverse = true
@@ -24,8 +24,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
   $scope.selectedRequest = null
   $scope.editScopeForm = {}
   $scope.selected = false
-  $scope.userId = 0
-
+  $scope.userId = ''
 
 
 
@@ -42,6 +41,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
   .success (user)->
     #$scope.activeUser = user.appuser
     $scope.userId = user.appuser
+    # $scope.userId = userId
     userId = user.appuser
     userRequests = []
     requests = RequestFactory.query(
@@ -61,7 +61,9 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
     debounceFn = $mdUtil.debounce((->
       $mdSidenav(navID).toggle().then ->
         $log.debug 'toggle ' + navID + ' is done'
+        console.log $scope.userId
         return
+
       return
     ), 200)
     debounceFn
@@ -69,9 +71,11 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
   $scope.toggleRight = buildToggler('right')
 
   $scope.close = ->
+
     $mdSidenav('right').close().then ->
       $log.debug 'close RIGHT is done'
       return
+    $scope.showComment = false
     return
 
   $scope.selectScope = (scope) ->
@@ -93,13 +97,14 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
 
   $scope.addRequest = (event, err) ->
 
+
     if err
       console.log err
       return
 
     #console.log $scope.addRequestForm
     newRequest = $scope.addRequestForm
-    newRequest.statusId = $scope.selectedRequest.defaultStatus
+    newRequest.statusId = $scope.selectedScope.defaultStatus
     newRequest.userId = $scope.userId
 
     console.log newRequest
@@ -141,10 +146,12 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
       {userId: $scope.userId},
       (success) ->
         $scope.requests = requests
+
       ,
       (err) ->
         console.log err
     )
+    $scope.requests.reverse()
     return
 
   $scope.selectRequest = (request) ->
@@ -225,6 +232,31 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
     return
 
 
+  $scope.addComment = () ->
+
+    newComment = $scope.addCommentForm
+    newComment.userId = $scope.userId
+    newComment.requestId = $scope.selectedRequest.id
+
+    saveComment = CommentFactory.save(
+      newComment,
+      (success) ->
+        console.log "added comment"
+        console.log success
+        $scope.selectedRequest.comments.push success
+        $scope.addCommentForm = {}
+        # $scope.toView =true
+        #$scope.fillCommentList()
+      ,
+      (err) ->
+        console.log err
+
+    )
+    console.log newComment
+
+    return
+
+
   orderBy = $filter('orderBy')
   # $scope.requests = Request
   $scope.order = (predicate, reverse) ->
@@ -261,6 +293,11 @@ app.factory 'RequestFactory' , [
     $resource '/request/:id', {id:'@id'} ,
 ]
 
+app.factory 'CommentFactory' , [
+  '$resource'
+  ($resource) ->
+    $resource '/comment/:id', {id:'@id'} ,
+]
 
 
 
