@@ -93,6 +93,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
       (success) ->
         # console.log "showing alerts received"
         # console.log receive
+        $scope.alerts = []
         receive.forEach (el) ->
           $scope.alerts.push el
       ,
@@ -105,6 +106,15 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
 
     console.log alert
     receiverId = alert.id
+    alertScopeId = alert.alertId.requestId
+
+    reqI = $scope.requests.map (request) ->
+      return request.id
+
+    $scope.selectRequest $scope.requests[reqI.indexOf(alertScopeId)]
+
+
+    
     ReceiverFactory.get {id: receiverId}, (saveReceiver) ->
       saveReceiver.viewed = true
       saveReceiver.$save () ->
@@ -234,7 +244,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
     
 
     newAlert = {}
-    msg = (type=="status")? "Status changed : " : "New comment : "
+    msg = if type=="status" then "Status changed : " else "New comment : "
     scopeId = $scope.selectedRequest.scopeId.id
 
     scopeObj = ScopeFactory.get(

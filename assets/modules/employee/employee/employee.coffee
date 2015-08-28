@@ -106,6 +106,15 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
 
     console.log alert
     receiverId = alert.id
+    alertScopeId = alert.alertId.requestId
+
+    reqI = $scope.requests.map (request) ->
+      return request.id
+
+    $scope.selectRequest $scope.requests[reqI.indexOf(alertScopeId)]
+
+
+
     ReceiverFactory.get {id: receiverId}, (saveReceiver) ->
       saveReceiver.viewed = true
       saveReceiver.$save () ->

@@ -103,7 +103,7 @@ app.controller 'ConcernCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $
       newConcern,
       (successRes) ->
         $scope.close()
-        $scope.addConcernForm = ""
+        $scope.addConcernForm = {}
         $scope.fillConcernList()
         #console.log successRes
       ,
