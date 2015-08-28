@@ -8,7 +8,6 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
   $scope.comments = []
   $scope.userSearch = ''
   $scope.search = ''
-  $scope.scopes = []
   $scope.scopes = ScopeFactory.query();
 
   $scope.selectedScope = {}
@@ -26,13 +25,15 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
 #========================
 
   $scope.requests = []
-
+  $scope.alerts = []
 
   $http.get "/session/check"
   .success (user)->
-    #$scope.activeUser = user.appuser
     userId = user.appuser
     $scope.userId = userId
+
+    $scope.fillAlertList() #setup alerts if any
+
     scopeAdministered = []
     administer = AdminFactory.query(
       {userId: userId},
@@ -75,6 +76,20 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
       return
     return
 
+
+  $scope.fillAlertList = () ->
+    userScopes = $scope.scopes
+    #console.log userScopes
+    requests = RequestFactory.query(
+      {scopeId:  userScopes },
+      (success) ->
+        #console.log requests
+        $scope.requests = requests
+      ,
+      (err) ->
+        console.log err
+    )
+    return
 
   $scope.fillRequestList = () ->
     #$scope.requests = RequestFactory.query();

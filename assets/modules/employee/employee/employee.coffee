@@ -2,7 +2,8 @@
 
 
 
-app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory,CommentFactory) ->
+
+app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory, AlertFactory, ReceiverFactory) ->
 
   # $scope.predicate = 'createdAt'
   # $scope.reverse = true
@@ -107,14 +108,43 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
     newRequest.statusId = $scope.selectedScope.defaultStatus
     newRequest.userId = $scope.userId
 
+    alertReceivers = []
+    $scope.selectedScope.admins.forEach (el, i) ->
+      alertReceivers.push {userId : el.userId}
+    
+
+    newAlert = {
+      type: 'request',
+      message: 'New Request : '+newRequest.title,
+      userId: $scope.userId
+      receivers: alertReceivers
+    }
+
+    #newRequest.alerts = newAlert # shortcut .. but no
+    console.log "receivers"
+    console.log alertReceivers
+    console.log "alert"
+ 
+    console.log newAlert
+    console.log "request"
     console.log newRequest
+
+    
 
     saveRequest = RequestFactory.save(
       newRequest,
-      (successRes) ->
-        console.log successRes
+      (requestData) ->
+        console.log requestData
         $scope.fillRequestList()
         $scope. addRequestForm = {}
+        newAlert.requestId = requestData.id
+        saveAler = AlertFactory.save(
+          newAlert,
+          (alertData) ->
+            console.log alertData
+
+        )
+
         $scope.close()
       ,
       (err) ->
@@ -257,6 +287,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
     return
 
 
+
   orderBy = $filter('orderBy')
   # $scope.requests = Request
   $scope.order = (predicate, reverse) ->
@@ -298,6 +329,21 @@ app.factory 'CommentFactory' , [
   ($resource) ->
     $resource '/comment/:id', {id:'@id'} ,
 ]
+
+app.factory 'AlertFactory' , [
+  '$resource'
+  ($resource) ->
+    $resource '/alert/:id', {id:'@id'} ,
+]
+
+app.factory 'ReceiverFactory' , [
+  '$resource'
+  ($resource) ->
+    $resource '/receiver/:id', {id:'@id'} ,
+]
+
+
+
 
 
 
