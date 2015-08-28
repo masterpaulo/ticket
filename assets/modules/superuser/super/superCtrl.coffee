@@ -156,7 +156,7 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
       {id: $scope.selectedScope.id},
       (successRes) ->
         $scope.selectedScope.admins = test.admins
-        $scope.selectedScope.admins.forEach (admin, i) ->
+        ###$scope.selectedScope.admins.forEach (admin, i) ->
           userId = admin.userId
           $scope.adminIds.push userId
           USER.find({id:userId})
@@ -166,7 +166,16 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
             if data.length > -1
               appuser = data[0].profileId
               $scope.selectedScope.admins[i].name = appuser.firstName + " " + appuser.lastName
-            return
+            return###
+
+        userIds = $scope.selectedScope.admins.map (admin)->
+          return admin.userId
+
+        PROFILE.find appuserId: userIds
+        .exec (err,data)->
+          console.log data
+          $scope.selectedScope.admins = data
+
         #console.log $scope.adminIds #list of admin ids of scopes for validation purposes
         return
     )

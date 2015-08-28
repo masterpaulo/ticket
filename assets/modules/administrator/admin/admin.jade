@@ -78,11 +78,12 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
         md-menu(md-position-mode="target-right target")
           md-button.md-raised.green( aria-label="Open status menu", ng-click="$mdOpenMenu($event)")
             | {{selectedRequest.statusId.name}}
+            md-icon(md-svg-src="images/icons/down-arrow.svg")
           md-menu-content(width="4")
             md-menu-item(ng-repeat="status in scopeStatuses")
               md-button(ng-click="setStatus(status, selectedRequest)")
                 div(layout="row")
-                  p(flex) {{status.name}}
+                  p(flex) {{status.name}} 
 
 
 
