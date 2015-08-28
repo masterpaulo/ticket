@@ -11,9 +11,11 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
   div(layout="row", flex)
     div(flex, layout="column", style="background-color:#F7F7F7" )
       md-toolbar(class=" md-hue-3", flex="25")
-          div(layout="row",class="md-toolbar-tools")
-              h2(flex) Filters here...
-      div(layout-margin,flex, layout="row")
+        div(layout="row",class="md-toolbar-tools")
+          div(flex)
+            div(flex offset='70')
+              input(type='text' placeholder='SEARCH' ng-model='search')
+      div(layout-margin,flex, layout="row" )
         .md-whiteframe-z2(flex)
           md-toolbar(class=" md-accent", flex="25")
             .md-toolbar-tools(layout="row")
@@ -30,7 +32,7 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
               h3(flex, layout-align="center center") Actions
 
           md-list(flex, style="max-height:700px;overflow:auto;")
-              md-list-item(layout="row" , class="md-3-line", ng-repeat="request in requests" , ng-click="selectRequest(request)")
+              md-list-item(layout="row" , class="md-3-line", ng-repeat="request in requests | filter:search " , ng-click="selectRequest(request)")
                   .md-list-item-text(flex) {{ request.createdAt | date :'MMM d, y   h:mm a' }}
                   .md-list-item-text(flex) {{request.userId}}
                   .md-list-item-text(flex) {{request.title}}
@@ -38,6 +40,10 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
                   .md-list-item-text(flex) {{request.concernId.name}}
                   .md-list-item-text(flex) Gonna delete you
                   md-divider
+
+
+
+
 
 
 
@@ -53,18 +59,51 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
           h2 {{selectedRequest.scopeId.name}}
           small {{selectedRequest.concernId.name}}
         section(flex)
-        md-button.md-raised.green NEW
+        //- md-button.md-raised.green NEW
+        md-menu(md-position-mode="target-right target")
+          md-button.md-raised.green( aria-label="Open status menu", ng-click="$mdOpenMenu($event)")
+            | {{selectedRequest.statusId.name}}
+          md-menu-content(width="4")
+            md-menu-item(ng-repeat="status in scopeStatuses")
+              md-button(ng-click="setStatus(status, selectedRequest)")
+                div(layout="row")
+                  p(flex) {{status.name}}
+
+
+
+
+
       div.black-text()
         md-card
           md-card-content
             h5.title {{selectedRequest.title}}
             //-h6 {{selectedRequest.userId}} John Paulo bonacua
             md-divider
-            h6 John Paulo Bonacua
+            h6 {{selectedRequest.userId}}
             h6 {{selectedRequest.createdAt | date :'MMM d, y   h:mm a' }}
             p {{selectedRequest.description}}
 
 
 
-    md-content.container(layout-padding='', style="width:85%;min-width:100px;")
-      h5 commets go here
+
+    md-content(flex, style="position:relative")
+      //- style="max-height:600px;positionrelative",
+      div( flex)
+        md-list
+          md-list-item(ng-repeat="comment in selectedRequest.comments")
+            div(layout-margin)
+              h2.md-title(layout="row") {{comment.userId}}
+              small {{comment.createdAt | date :'MMM d, y   h:mm a' }}
+              p {{comment.message}}
+            md-divider
+      div
+        form(name="CommentForm", layout-margin)
+          md-input-container
+            label Add comment
+            textarea(ng-model="addCommentForm.message", columns="1" md-maxlength="150", required)
+
+
+          md-button.md-raised.md-primary(ng-click="addComment()") Add
+          md-button.md-raised(ng-click="close()") Cancel
+
+

@@ -2,25 +2,50 @@
 
 
 
-app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter,$http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory) ->
+app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory, CommentFactory) ->
+
   $scope.scopes = []
-  $scope.users = []
+  $scope.comments = []
   $scope.userSearch = ''
   $scope.search = ''
   $scope.scopes = []
   $scope.scopes = ScopeFactory.query();
 
-  $scope.addScopeForm = {}
-  $scope.selectedScope = null
-  $scope.editScopeForm = {}
+  $scope.selectedScope = {}
+  $scope.scopeStatuses = []
+
   $scope.selected = false
 
+  $scope.addCommentForm = {}
+
+
   $scope.adminIds = []
-  $scope.scopes = ScopeFactory.query();
+  $scope.userId = ""
+  $scope.scopes = [];
 
 #========================
 
   $scope.requests = []
+
+
+  $http.get "/session/check"
+  .success (user)->
+    #$scope.activeUser = user.appuser
+    userId = user.appuser
+    $scope.userId = userId
+    scopeAdministered = []
+    administer = AdminFactory.query(
+      {userId: userId},
+      (successRes) ->
+        #console.log administer
+        administer.forEach (admin, i) ->
+          scopeAdministered.push admin.scopeId.id
+        $scope.scopes = scopeAdministered
+        $scope.fillRequestList()
+      ,
+      (errRes) ->
+        console.log errRes
+    )
 
 
 
@@ -33,7 +58,6 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter,$http, $mdSide
 
 
   buildToggler = (navID) ->
-    $scope.addScopeForm.name =''
     debounceFn = $mdUtil.debounce((->
       $mdSidenav(navID).toggle().then ->
         $log.debug 'toggle ' + navID + ' is done'
@@ -45,6 +69,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter,$http, $mdSide
   $scope.toggleRight = buildToggler('right')
 
   $scope.close = ->
+
     $mdSidenav('right').close().then ->
       $log.debug 'close RIGHT is done'
       return
@@ -53,8 +78,12 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter,$http, $mdSide
 
   $scope.fillRequestList = () ->
     #$scope.requests = RequestFactory.query();
+    userScopes = $scope.scopes
+    #console.log userScopes
     requests = RequestFactory.query(
+      {scopeId:  userScopes },
       (success) ->
+        #console.log requests
         $scope.requests = requests
       ,
       (err) ->
@@ -62,13 +91,13 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter,$http, $mdSide
     )
     return
 
-  $scope.fillRequestList()
-
 
   $scope.selectRequest = (request) ->
     $scope.selected = true
     $scope.selectedRequest = request
+    $scope.selectScope request.scopeId
     $scope.toViewRequest()
+    #console.log request
     return
 
 
@@ -78,9 +107,9 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter,$http, $mdSide
       console.log errRes
       return
 
-    $scope.editScopeForm.name = $scope.selectedRequest.name
+    #$scope.editScopeForm.name = $scope.selectedRequest.name
     $scope.toView = true
-
+    # $scope.fillCommentList()
     $scope.toggleRight()
 
     #inject view for 'edit scope' form
@@ -89,163 +118,79 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter,$http, $mdSide
 
 
 
-  $scope.refresh = () ->
-    $scope.scopes = ScopeFactory.query();
-    return
-
   $scope.selectScope = (scope) ->
-    $scope.selected = true
-    $scope.selectedScope = scope
-    #console.log 'selected scope : ' + $scope.selectedScope.name
-    $scope.fillAdminList()
-    return
 
-  $scope.fillAdminList = () ->
-    #console.log $scope.selectedScope # check selected scope
-    $scope.adminIds = []
-    test = ScopeFactory.get(
-      {id: $scope.selectedScope.id},
-      (successRes) ->
-        $scope.selectedScope.admins = test.admins
-        $scope.selectedScope.admins.forEach (admin, i) ->
-          userId = admin.userId
-          $scope.adminIds.push userId
-          USER.find({id:userId})
-          .populate('profileId')
-          .exec (err,data) ->
-            #console.log data
-            if data.length > -1
-              appuser = data[0].profileId
-              $scope.selectedScope.admins[i].name = appuser.firstName + " " + appuser.lastName
-            return
-        #console.log $scope.adminIds #list of admin ids of scopes for validation purposes
-        return
-    )
+    scopeObj = ScopeFactory.get(
+      {id:scope.id},
+      (success) ->
 
+        $scope.selectedScope = scopeObj
+        $scope.scopeStatuses = scopeObj.status
 
-
-
-    return
-
-  $scope.adminExist = (user) ->
-    if ($scope.adminIds.indexOf user.id) > -1
-      return true
-    else
-      return false
-
-  $scope.addAdmin = (user, scope) ->
-    console.log user.id
-    console.log scope.id
-    $scope.search = ""
-    data = {
-      scopeId: scope.id
-      userId: user.id
-    }
-    #$scope.ggNames.push user.profileId.firstName
-    AdminFactory.save(
-      data,
-      (successRes) ->
-        console.log successRes
-        $scope.fillAdminList()
-        return
       ,
-      (errRes) ->
-        console.log errRes
+      (err) ->
+        console.log err
+    )
+
+    return
+
+
+
+  $scope.setStatus = (status, request) ->
+    $scope.selectedRequest.statusId = status
+    RequestFactory.get {id:request.id}, (saveRequest) ->
+
+      saveRequest.statusId = status.id
+      saveRequest.$save (success) ->
+        $scope.selectedRequest = success
+        $scope.fillRequestList()
+
         return
-    )
+      return
 
     return
 
+##   COMMENTS
 
-  $scope.deleteAdmin = (adminId) ->
-    console.log "deleting admin : " + adminId
-    console.log AdminFactory.delete({id:adminId},
-      (successRes) ->
-        $scope.fillAdminList()
+  $scope.addComment = () ->
+    newComment = $scope.addCommentForm
+    newComment.userId = $scope.userId
+    newComment.requestId = $scope.selectedRequest.id
+
+    saveComment = CommentFactory.save(
+      newComment,
+      (success) ->
+        console.log "added comment"
+        console.log success
+        $scope.selectedRequest.comments.push success
+        $scope.addCommentForm = {}
+        #$scope.fillCommentList()
       ,
-      (errRes) ->
-        console.log errRes
+      (err) ->
+        console.log err
     )
-
-
-    return
-  $scope.searchUser = ->
-    reset = false
-    doReset = ->
-        if !reset
-            reset = true
-            $scope.users = []
-    if $scope.search.length > 3
-        reset = false
-        $scope.users = []
-
-        query1   =
-            or:[
-                {
-                    email:
-                        'contains':"#{$scope.search}"
-                }
-                {
-                    username:
-                        'contains':"#{$scope.search}"
-                }
-
-            ]
-
-        USER.find query1
-        .populate "profileId"
-        .exec (err,data)->
-            doReset()
-            if err
-                console.log err
-            else if data.length
-                l = $scope.users.length
-                if l > 0
-                    userExists = $scope.users.map (e)->
-                        return e.id
-                data.forEach (user)->
-                    $scope.users.push user if !l or (userExists.indexOf user.id) is -1
-
-        query2 =
-            or:[
-                {
-                    firstName:
-                        'contains':"#{$scope.search}"
-                }
-                {
-                    lastName:
-                        'contains':"#{$scope.search}"
-                }
-
-            ]
-
-        PROFILE.find query2
-        .populate "appuserId"
-        .exec (err,data)->
-            doReset()
-            if err
-                console.log err
-            else if data.length
-                l = $scope.users.length
-                if l > 0
-                    userExists = $scope.users.map (e)->
-                        return e.id
-                data.forEach (user)->
-                    appuser = angular.copy user.appuserId
-                    appuser.profileId = angular.copy user
-                    delete appuser.profileId.appuserId
-                    $scope.users.push appuser if !l or (userExists.indexOf appuser.id) is -1
+    console.log newComment
     return
 
 
-
+  # $scope.fillCommentList = () ->
+  #   requestId = $scope.selectedRequest.id
+  #   comments = CommentFactory.query(
+  #     {requestId:  requestId },
+  #     (success) ->
+  #       $scope.comments = comments
+  #     ,
+  #     (err) ->
+  #       console.log err
+  #   )
+  #   return
 
   orderBy = $filter('orderBy')
   # $scope.requests = Request
   $scope.order = (predicate, reverse) ->
     $scope.requests = orderBy($scope.requests, predicate, reverse)
 
-  $scope.order('createAt',false)
+  $scope.order('title',false)
 
 
 
@@ -275,6 +220,12 @@ app.factory 'RequestFactory' , [
   '$resource'
   ($resource) ->
     $resource '/request/:id', {id:'@id'} ,
+]
+
+app.factory 'CommentFactory' , [
+  '$resource'
+  ($resource) ->
+    $resource '/comment/:id', {id:'@id'} ,
 ]
 
 
