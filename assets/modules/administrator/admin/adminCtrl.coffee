@@ -2,7 +2,7 @@
 
 
 
-app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory, CommentFactory) ->
+app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory, CommentFactory, AlertFactory, ReceiverFactory) ->
 
   $scope.scopes = []
   $scope.comments = []
@@ -17,7 +17,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
 
   $scope.addCommentForm = {}
 
-
+  $scope.employeeNames = []
   $scope.adminIds = []
   $scope.userId = ""
   $scope.scopes = [];
@@ -26,6 +26,9 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
 
   $scope.requests = []
   $scope.alerts = []
+
+
+
 
   $http.get "/session/check"
   .success (user)->
@@ -43,10 +46,12 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
           scopeAdministered.push admin.scopeId.id
         $scope.scopes = scopeAdministered
         $scope.fillRequestList()
+        $scope.fillAlertList()
       ,
       (errRes) ->
         console.log errRes
     )
+
 
 
 
@@ -56,6 +61,8 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
   APPS = new ApiObject "token"
   USERROLE = new ApiObject "userrole"
 
+
+  
 
 
   buildToggler = (navID) ->
@@ -79,27 +86,57 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
 
   $scope.fillAlertList = () ->
     userScopes = $scope.scopes
+    $scope.alerts = []
     #console.log userScopes
-    requests = RequestFactory.query(
-      {scopeId:  userScopes },
+    receive = ReceiverFactory.query(
+      {userId:  $scope.userId, viewed:false },
       (success) ->
-        #console.log requests
-        $scope.requests = requests
+        # console.log "showing alerts received"
+        # console.log receive
+        receive.forEach (el) ->
+          $scope.alerts.push el
       ,
       (err) ->
         console.log err
     )
     return
 
+  $scope.selectAlert = (alert) ->
+
+    console.log alert
+    receiverId = alert.id
+    ReceiverFactory.get {id: receiverId}, (saveReceiver) ->
+      saveReceiver.viewed = true
+      saveReceiver.$save () ->
+        console.log "user has viewed the alert."
+        $scope.fillAlertList()
+
+    return
+
   $scope.fillRequestList = () ->
     #$scope.requests = RequestFactory.query();
     userScopes = $scope.scopes
     #console.log userScopes
+    if userScopes.length < 1
+      return 
+
     requests = RequestFactory.query(
       {scopeId:  userScopes },
       (success) ->
         #console.log requests
+
+        requests.forEach (req, i) ->
+          user = req.userId
+          USER.find({id:user})
+          .populate('profileId')
+          .exec (err,data) ->
+            #console.log data
+            $scope.employeeNames[user] = data[0].profileId.firstName + " " + data[0].profileId.lastName
+            return
+
         $scope.requests = requests
+
+
         $scope.requests.reverse()
       ,
       (err) ->
@@ -160,6 +197,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
       saveRequest.$save (success) ->
         $scope.selectedRequest = success
         $scope.fillRequestList()
+        $scope.addAlert(request.id, "status")
 
         return
       return
@@ -180,13 +218,60 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
         console.log success
         $scope.selectedRequest.comments.push success
         $scope.addCommentForm = {}
-        #$scope.fillCommentList()
+        $scope.addAlert(newComment.requestId, "comment") #
+        
       ,
       (err) ->
         console.log err
+
     )
-    console.log newComment
+
     return
+
+
+
+  $scope.addAlert = (requestId, type) ->
+    
+
+    newAlert = {}
+    msg = (type=="status")? "Status changed : " : "New comment : "
+    scopeId = $scope.selectedRequest.scopeId.id
+
+    scopeObj = ScopeFactory.get(
+      {id:scopeId},
+      (success) ->
+        console.log success
+        alertReceivers = []
+        alertReceivers.push {userId:$scope.selectedRequest.userId}
+        success.admins.forEach (el, i) ->
+          if el.userId != $scope.userId
+            alertReceivers.push {userId : el.userId}
+
+
+
+        newAlert = {
+          type: type,
+          message: msg+$scope.selectedRequest.title,
+          userId: $scope.userId
+          requestId: requestId
+          receivers: alertReceivers
+        }
+        saveAlert = AlertFactory.save(
+          newAlert,
+          (alertData) ->
+            console.log alertData
+        )
+        
+        console.log newAlert
+
+        return
+      ,
+      (err) ->
+        console.log err
+        return
+    )
+
+
 
 
   # $scope.fillCommentList = () ->
@@ -243,6 +328,22 @@ app.factory 'CommentFactory' , [
   ($resource) ->
     $resource '/comment/:id', {id:'@id'} ,
 ]
+
+
+
+app.factory 'AlertFactory' , [
+  '$resource'
+  ($resource) ->
+    $resource '/alert/:id', {id:'@id'} ,
+]
+
+app.factory 'ReceiverFactory' , [
+  '$resource'
+  ($resource) ->
+    $resource '/receiver/:id', {id:'@id'} ,
+]
+
+
 
 
 

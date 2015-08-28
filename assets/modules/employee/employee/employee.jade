@@ -7,6 +7,22 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
         md-button
           md-icon(md-svg-icon="images/icons/menu.svg")
         h2 Requests
+        section(flex)
+
+        md-menu(md-position-mode="target-right target", style="max-height:500px;")
+          md-button.md-icon-button(ng-click="$mdOpenMenu($event)")
+            md-icon(md-menu-origin, md-svg-icon="images/icons/alert.svg")
+          md-menu-content(width="6")
+            md-menu-item(layout="row")
+              h5(flex) ALERTS
+              md-button.md-icon-button(ng-click="$mdOpenMenu($event)")
+                md-icon.red-text(md-menu-align-target, md-svg-icon="images/icons/alert.svg")
+            md-divider(flex)
+            md-menu-item(ng-repeat="alert in alerts")
+              md-button(ng-click="selectAlert(alert); $mdCloseMenu($event)")
+                div(layout="row")
+                  p(flex) {{alert.alertId.message}}
+        seciotn(flex="5")
 
   div(layout="row", flex)
     div(flex, layout="column", style="background-color:#F7F7F7" )
@@ -49,45 +65,44 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
 
 
   md-sidenav.md-sidenav-right.md-whiteframe-z2(md-component-id='right', style="width:500px; max-width:none")
-    div(ng-show='toView')
-      md-toolbar.md-theme-light.md-primary.md-hue-3
-        div.md-toolbar-tools
-          h2(ng-show="!toView") Send Request
-          div(ng-show="toView", layout="column")
-            h2 {{selectedRequest.scopeId.name}}
-            small {{selectedRequest.concernId.name}}
-          section(flex)
-          md-button.md-raised.green(ng-show="!toView") {{selectedScope.defaultStatus.name}}
-          md-button.md-raised.green(ng-show="toView") {{selectedRequest.statusId.name}}
 
-        div.black-text(ng-if="toView")
-          md-card
-            md-card-content
-              h5.title {{selectedRequest.title}}
-              md-divider
-              h6 {{selectedRequest.createdAt | date :'MMM d, y   h:mm a' }}
-              p {{selectedRequest.description}}
+    md-toolbar.md-theme-light.md-primary.md-hue-3
+      div.md-toolbar-tools
+        h2(ng-show="!toView") Send Request
+        div(ng-show="toView", layout="column")
+          h2 {{selectedRequest.scopeId.name}}
+          small {{selectedRequest.concernId.name}}
+        section(flex)
+        md-button.md-raised.green(ng-show="!toView") {{selectedScope.defaultStatus.name}}
+        md-button.md-raised.green(ng-show="toView") {{selectedRequest.statusId.name}}
 
-
-      md-content(flex, style="position:relative")
-      //- style="max-height:600px;positionrelative",
-      div( flex)
-        md-list
-          md-list-item(ng-repeat="comment in selectedRequest.comments")
-            div(layout-margin)
-              h2.md-title(layout="row") {{comment.userId}}
-              small {{comment.createdAt | date :'MMM d, y   h:mm a' }}
-              p {{comment.message}}
+      div.black-text(ng-if="toView")
+        md-card
+          md-card-content
+            h5.title {{selectedRequest.title}}
             md-divider
-      div
-        form(name="CommentForm", layout-margin)
-          md-input-container
-            label Add comment
-            textarea(ng-model="addCommentForm.message", columns="1" md-maxlength="150", required)
+            h6 {{selectedRequest.createdAt | date :'MMM d, y   h:mm a' }}
+            p {{selectedRequest.description}}
 
 
-          md-button.md-raised.md-primary(ng-click="addComment()") Add
-          md-button.md-raised(ng-click="close()") Cancel
+    md-content(flex, style="position:relative", ng-if='toView')
+    
+      md-list
+        md-list-item(ng-repeat="comment in selectedRequest.comments")
+          div(layout-margin)
+            h2.md-title(layout="row") {{comment.userId}}
+            small {{comment.createdAt | date :'MMM d, y   h:mm a' }}
+            p {{comment.message}}
+          md-divider
+
+      form(name="CommentForm", layout-margin)
+        md-input-container
+          label Add comment
+          textarea(ng-model="addCommentForm.message", columns="1" md-maxlength="150", required)
+
+
+        md-button.md-raised.md-primary(ng-click="addComment()") Add
+        md-button.md-raised(ng-click="close()") Cancel
 
 
 
@@ -95,8 +110,8 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
 
 
 
-    md-content.container(layout-padding='', style="width:85%;min-width:100px;")
-      form(ng-if='!toView', name="RequestForm")
+    md-content.container(ng-if='!toView',layout-padding='', style="width:85%;min-width:100px;")
+      form( name="RequestForm")
         md-input-container
           label Title
           input(type="text" ng-model="addRequestForm.title" md-maxlength="30", required)

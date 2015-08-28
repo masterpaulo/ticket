@@ -9,17 +9,19 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
         h2 Requests
         section(flex)
 
-        md-menu(md-position-mode="target-right target")
+        md-menu(md-position-mode="target-right target", style="max-height:500px;")
           md-button.md-icon-button(ng-click="$mdOpenMenu($event)")
-            md-icon(md-svg-icon="images/icons/alert.svg")
+            md-icon(md-menu-origin, md-svg-icon="images/icons/alert.svg")
           md-menu-content(width="6")
-            md-menu-item 
-              h2.md-title(flex) ALERTS
+            md-menu-item(layout="row")
+              h5(flex) ALERTS
+              md-button.md-icon-button(ng-click="$mdOpenMenu($event)")
+                md-icon.red-text(md-menu-align-target, md-svg-icon="images/icons/alert.svg")
             md-divider(flex)
-            md-menu-item(ng-repeat="alert in [1,2,3,4]")
-              md-button()
+            md-menu-item(ng-repeat="alert in alerts")
+              md-button(ng-click="selectAlert(alert); $mdCloseMenu($event)")
                 div(layout="row")
-                  p(flex) Alert {{alert}}
+                  p(flex) {{alert.alertId.message}}
         
         seciotn(flex="5")
 
@@ -37,23 +39,24 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
               h3(flex, layout-align="center center")
                 a(href='', ng-click="reverse=!reverse;order('createdAt', reverse)") Date
               h3(flex, layout-align="center center")
-                a(href='', ng-click="reverse=!reverse;order('userId', reverse)") Sender
+                a(href='', ng-click="reverse=!reverse;order('name', reverse)") Sender
               h3(flex, layout-align="center center")
                 a(href='', ng-click="reverse=!reverse;order('title', reverse)") Title
               h3(flex, layout-align="center center")
                 a(href='', ng-click="reverse=!reverse;order('scopeId.name', reverse)") Scope
               h3(flex, layout-align="center center")
                 a(href='', ng-click="reverse=!reverse;order('concernId.name', reverse)") Concern
-              h3(flex, layout-align="center center") Actions
+              h3(flex, layout-align="center center") Status
 
           md-list(flex, style="max-height:700px;overflow:auto;")
               md-list-item(layout="row" , class="md-3-line", ng-repeat="request in requests | filter:search " , ng-click="selectRequest(request)")
                   .md-list-item-text(flex) {{ request.createdAt | date :'MMM d, y   h:mm a' }}
-                  .md-list-item-text(flex) {{request.userId}}
+                  .md-list-item-text(flex) {{employeeNames[request.userId]}}
                   .md-list-item-text(flex) {{request.title}}
                   .md-list-item-text(flex) {{request.scopeId.name}}
                   .md-list-item-text(flex) {{request.concernId.name}}
-                  .md-list-item-text(flex) Gonna delete you
+                  .md-list-item-text(flex) 
+                    md-button.md-no-ink.md-raised {{request.statusId.name}}
                   md-divider
 
 
@@ -91,7 +94,7 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
             h5.title {{selectedRequest.title}}
             //-h6 {{selectedRequest.userId}} John Paulo bonacua
             md-divider
-            h6 {{selectedRequest.userId}}
+            h6 {{employeeNames[selectedRequest.userId]}}
             h6 {{selectedRequest.createdAt | date :'MMM d, y   h:mm a' }}
             p {{selectedRequest.description}}
 
@@ -104,7 +107,7 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
         md-list
           md-list-item(ng-repeat="comment in selectedRequest.comments")
             div(layout-margin)
-              h2.md-title(layout="row") {{comment.userId}}
+              h2.md-title(layout="row") {{employeeNames[comment.userId]}}
               small {{comment.createdAt | date :'MMM d, y   h:mm a' }}
               p {{comment.message}}
             md-divider

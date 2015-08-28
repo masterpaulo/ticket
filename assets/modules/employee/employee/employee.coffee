@@ -3,7 +3,7 @@
 
 
 
-app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory, AlertFactory, ReceiverFactory) ->
+app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory, CommentFactory, AlertFactory, ReceiverFactory) ->
 
   # $scope.predicate = 'createdAt'
   # $scope.reverse = true
@@ -16,12 +16,15 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
   $scope.userSearch = ''
   $scope.search = ''
   $scope.requests = []
+  $scope.alerts = []
   $scope.scopes = ScopeFactory.query()
 
   $scope.selectedScope = {}
   $scope.scopeConcerns = []
 
   $scope.addRequestForm = {}
+  $scope.addCommentForm = {}
+
   $scope.selectedRequest = null
   $scope.editScopeForm = {}
   $scope.selected = false
@@ -54,6 +57,10 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
         console.log err
     )
 
+    $scope.fillAlertList()
+
+    return
+
 
 
 
@@ -77,6 +84,34 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
       $log.debug 'close RIGHT is done'
       return
     $scope.showComment = false
+    return
+
+
+  $scope.fillAlertList = () ->
+    $scope.alerts = []
+    receive = ReceiverFactory.query(
+      {userId:  $scope.userId, viewed:false },
+      (success) ->
+        # console.log "showing alerts received"
+        # console.log receive
+        receive.forEach (el) ->
+          $scope.alerts.push el
+      ,
+      (err) ->
+        console.log err
+    )
+    return
+
+  $scope.selectAlert = (alert) ->
+
+    console.log alert
+    receiverId = alert.id
+    ReceiverFactory.get {id: receiverId}, (saveReceiver) ->
+      saveReceiver.viewed = true
+      saveReceiver.$save () ->
+        console.log "user has viewed the alert."
+        $scope.fillAlertList()
+
     return
 
   $scope.selectScope = (scope) ->
@@ -103,16 +138,17 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
       console.log err
       return
 
-    #console.log $scope.addRequestForm
+    # set all other data for new request
     newRequest = $scope.addRequestForm
     newRequest.statusId = $scope.selectedScope.defaultStatus
     newRequest.userId = $scope.userId
 
+    # get all the receivers of the alert (usually admins)
     alertReceivers = []
     $scope.selectedScope.admins.forEach (el, i) ->
       alertReceivers.push {userId : el.userId}
     
-
+    # set new alert data of the new request
     newAlert = {
       type: 'request',
       message: 'New Request : '+newRequest.title,
@@ -120,25 +156,20 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
       receivers: alertReceivers
     }
 
-    #newRequest.alerts = newAlert # shortcut .. but no
-    console.log "receivers"
-    console.log alertReceivers
-    console.log "alert"
- 
-    console.log newAlert
-    console.log "request"
-    console.log newRequest
-
     
-
+    # create request
     saveRequest = RequestFactory.save(
       newRequest,
       (requestData) ->
         console.log requestData
         $scope.fillRequestList()
         $scope. addRequestForm = {}
+
+        #get new reqeustId 
         newAlert.requestId = requestData.id
-        saveAler = AlertFactory.save(
+
+        #create alert
+        saveAlert = AlertFactory.save(
           newAlert,
           (alertData) ->
             console.log alertData
@@ -191,98 +222,69 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
     return
 
 
-
-
-  $scope.searchUser = ->
-    reset = false
-    doReset = ->
-        if !reset
-            reset = true
-            $scope.users = []
-    if $scope.search.length > 3
-        reset = false
-        $scope.users = []
-
-        query1   =
-            or:[
-                {
-                    email:
-                        'contains':"#{$scope.search}"
-                }
-                {
-                    username:
-                        'contains':"#{$scope.search}"
-                }
-
-            ]
-
-        USER.find query1
-        .populate "profileId"
-        .exec (err,data)->
-            doReset()
-            if err
-                console.log err
-            else if data.length
-                l = $scope.users.length
-                if l > 0
-                    userExists = $scope.users.map (e)->
-                        return e.id
-                data.forEach (user)->
-                    $scope.users.push user if !l or (userExists.indexOf user.id) is -1
-
-        query2 =
-            or:[
-                {
-                    firstName:
-                        'contains':"#{$scope.search}"
-                }
-                {
-                    lastName:
-                        'contains':"#{$scope.search}"
-                }
-
-            ]
-
-        PROFILE.find query2
-        .populate "appuserId"
-        .exec (err,data)->
-            doReset()
-            if err
-                console.log err
-            else if data.length
-                l = $scope.users.length
-                if l > 0
-                    userExists = $scope.users.map (e)->
-                        return e.id
-                data.forEach (user)->
-                    appuser = angular.copy user.appuserId
-                    appuser.profileId = angular.copy user
-                    delete appuser.profileId.appuserId
-                    $scope.users.push appuser if !l or (userExists.indexOf appuser.id) is -1
-    return
-
-
   $scope.addComment = () ->
 
     newComment = $scope.addCommentForm
     newComment.userId = $scope.userId
     newComment.requestId = $scope.selectedRequest.id
 
-    saveComment = CommentFactory.save(
-      newComment,
+    console.log "showing selected request"
+    console.log $scope.selectedRequest.scopeId
+
+    newAlert = {}
+
+    scopeId = $scope.selectedRequest.scopeId.id
+
+    scopeObj = ScopeFactory.get(
+      {id:scopeId},
       (success) ->
-        console.log "added comment"
         console.log success
-        $scope.selectedRequest.comments.push success
-        $scope.addCommentForm = {}
-        # $scope.toView =true
-        #$scope.fillCommentList()
+        alertReceivers = []
+        success.admins.forEach (el, i) ->
+          alertReceivers.push {userId : el.userId}
+
+
+        newAlert = {
+          type: 'comment',
+          message: 'New comment : '+$scope.selectedRequest.title,
+          userId: $scope.userId
+          requestId: newComment.requestId
+          receivers: alertReceivers
+        }
+
+        saveComment = CommentFactory.save(
+          newComment,
+          (success) ->
+            console.log "added comment"
+            console.log success
+            $scope.selectedRequest.comments.push success
+            $scope.addCommentForm = {}
+            saveAlert = AlertFactory.save(
+              newAlert,
+              (alertData) ->
+                console.log alertData
+            )
+          ,
+          (err) ->
+            console.log err
+
+        )
+        console.log newAlert
+
+        return
       ,
       (err) ->
         console.log err
-
+        return
     )
-    console.log newComment
+
+    # get all the receivers of the alert (usually admins)
+    
+    # $scope.selectedScope.admins.forEach (el, i) ->
+    #   alertReceivers.push {userId : el.userId}
+    
+    # set new alert data of the new request
+    
 
     return
 
