@@ -2,7 +2,7 @@
 
 
 
-app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory) ->
+app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory, AlertFactory, ReceiverFactory) ->
 
   # $scope.predicate = 'createdAt'
   # $scope.reverse = true
@@ -99,17 +99,46 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
 
     #console.log $scope.addRequestForm
     newRequest = $scope.addRequestForm
-    newRequest.statusId = $scope.selectedRequest.defaultStatus
+    newRequest.statusId = $scope.selectedScope.defaultStatus
     newRequest.userId = $scope.userId
 
+    alertReceivers = []
+    $scope.selectedScope.admins.forEach (el, i) ->
+      alertReceivers.push {userId : el.userId}
+    
+
+    newAlert = {
+      type: 'request',
+      message: 'New Request : '+newRequest.title,
+      userId: $scope.userId
+      receivers: alertReceivers
+    }
+
+    #newRequest.alerts = newAlert # shortcut .. but no
+    console.log "receivers"
+    console.log alertReceivers
+    console.log "alert"
+ 
+    console.log newAlert
+    console.log "request"
     console.log newRequest
+
+    
 
     saveRequest = RequestFactory.save(
       newRequest,
-      (successRes) ->
-        console.log successRes
+      (requestData) ->
+        console.log requestData
         $scope.fillRequestList()
         $scope. addRequestForm = {}
+        newAlert.requestId = requestData.id
+        saveAler = AlertFactory.save(
+          newAlert,
+          (alertData) ->
+            console.log alertData
+
+        )
+
         $scope.close()
       ,
       (err) ->
@@ -156,75 +185,6 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
 
 
 
-  $scope.searchUser = ->
-    reset = false
-    doReset = ->
-        if !reset
-            reset = true
-            $scope.users = []
-    if $scope.search.length > 3
-        reset = false
-        $scope.users = []
-
-        query1   =
-            or:[
-                {
-                    email:
-                        'contains':"#{$scope.search}"
-                }
-                {
-                    username:
-                        'contains':"#{$scope.search}"
-                }
-
-            ]
-
-        USER.find query1
-        .populate "profileId"
-        .exec (err,data)->
-            doReset()
-            if err
-                console.log err
-            else if data.length
-                l = $scope.users.length
-                if l > 0
-                    userExists = $scope.users.map (e)->
-                        return e.id
-                data.forEach (user)->
-                    $scope.users.push user if !l or (userExists.indexOf user.id) is -1
-
-        query2 =
-            or:[
-                {
-                    firstName:
-                        'contains':"#{$scope.search}"
-                }
-                {
-                    lastName:
-                        'contains':"#{$scope.search}"
-                }
-
-            ]
-
-        PROFILE.find query2
-        .populate "appuserId"
-        .exec (err,data)->
-            doReset()
-            if err
-                console.log err
-            else if data.length
-                l = $scope.users.length
-                if l > 0
-                    userExists = $scope.users.map (e)->
-                        return e.id
-                data.forEach (user)->
-                    appuser = angular.copy user.appuserId
-                    appuser.profileId = angular.copy user
-                    delete appuser.profileId.appuserId
-                    $scope.users.push appuser if !l or (userExists.indexOf appuser.id) is -1
-    return
-
-
   orderBy = $filter('orderBy')
   # $scope.requests = Request
   $scope.order = (predicate, reverse) ->
@@ -260,6 +220,21 @@ app.factory 'RequestFactory' , [
   ($resource) ->
     $resource '/request/:id', {id:'@id'} ,
 ]
+
+
+app.factory 'AlertFactory' , [
+  '$resource'
+  ($resource) ->
+    $resource '/alert/:id', {id:'@id'} ,
+]
+
+app.factory 'ReceiverFactory' , [
+  '$resource'
+  ($resource) ->
+    $resource '/receiver/:id', {id:'@id'} ,
+]
+
+
 
 
 

@@ -4,7 +4,7 @@ module.exports =
 
     type:
       type: 'string'
-      enum: ['status alert', 'comment alert']
+      enum: ['status', 'comment', 'request']
       defaultsTo: 'status alert'
     message:
       type: 'string'
@@ -14,11 +14,15 @@ module.exports =
       type: "boolean"
 
     receivers:
-      type: "ARRAY"
+      collection: "receiver"
+      via: 'alertId'
 
     userId:
-      model: 'user'
+      type: 'integer'
 
+      
     requestId:
+      type: 'integer'
       model: 'request'
+      defaultsTo: 0
 

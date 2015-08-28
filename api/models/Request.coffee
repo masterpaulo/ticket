@@ -34,3 +34,6 @@ module.exports =
       via: 'requestId'
 
 
+    alerts:
+      collection: 'alert'
+      via: 'requestId'

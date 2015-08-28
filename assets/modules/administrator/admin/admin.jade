@@ -7,6 +7,21 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
         md-button
           md-icon(md-svg-icon="images/icons/menu.svg")
         h2 Requests
+        section(flex)
+
+        md-menu(md-position-mode="target-right target")
+          md-button.md-icon-button(ng-click="$mdOpenMenu($event)")
+            md-icon(md-svg-icon="images/icons/alert.svg")
+          md-menu-content(width="6")
+            md-menu-item 
+              h2.md-title(flex) ALERTS
+            md-divider(flex)
+            md-menu-item(ng-repeat="alert in [1,2,3,4]")
+              md-button()
+                div(layout="row")
+                  p(flex) Alert {{alert}}
+        
+        seciotn(flex="5")
 
   div(layout="row", flex)
     div(flex, layout="column", style="background-color:#F7F7F7" )
@@ -40,9 +55,6 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
                   .md-list-item-text(flex) {{request.concernId.name}}
                   .md-list-item-text(flex) Gonna delete you
                   md-divider
-
-
-
 
 
 

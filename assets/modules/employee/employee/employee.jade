@@ -29,7 +29,7 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
               h3(flex, layout-align="center center")
                 a(href='', ng-click="reverse=!reverse;order('concernId.name', reverse)") Concern
 
-              h3(flex, layout-align="center center") Actions
+              h3(flex, layout-align="center center") Status
 
           md-list(flex, style="max-height:700px;overflow:auto;")
               md-list-item(layout="row" , class="md-3-line", ng-repeat="request in requests | filter:search" , ng-click="selectRequest(request)")
@@ -37,7 +37,7 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
                   .md-list-item-text(flex) {{request.title}}
                   .md-list-item-text(flex) {{request.scopeId.name}}
                   .md-list-item-text(flex) {{request.concernId.name}}
-                  .md-list-item-text(flex) Gonna delete you
+                  .md-list-item-text(flex) {{request.statusId.name}}
                   md-divider
 
 
