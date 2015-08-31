@@ -19,8 +19,12 @@ module.exports =
 
     userId:
       type: 'integer'
+      defaultsTo: 0
 
-      
+    roleId:
+      type: 'integer'
+      defaultsTo: 0
+
     requestId:
       type: 'integer'
       model: 'request'

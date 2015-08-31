@@ -4,7 +4,7 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
   div( layout="column")
     md-toolbar
       div(class="md-toolbar-tools")
-        md-button
+        md-button(ng-click="test()")
           md-icon(md-svg-icon="images/icons/menu.svg")
         h2 Requests
         section(flex)
@@ -48,17 +48,22 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
                 a(href='', ng-click="reverse=!reverse;order('concernId.name', reverse)") Concern
               h3(flex, layout-align="center center") Status
 
-          md-list(flex, style="max-height:700px;overflow:auto;")
+          md-list(flex, style="max-height:700px;overflow:auto;" ,ng-show="!reqListLoading" )
               md-list-item(layout="row" , class="md-3-line", ng-repeat="request in requests | filter:search " , ng-click="selectRequest(request)")
                   .md-list-item-text(flex) {{ request.createdAt | date :'MMM d, y   h:mm a' }}
-                  .md-list-item-text(flex) {{employeeNames[request.userId]}}
+                  .md-list-item-text(flex) {{request.name}}
                   .md-list-item-text(flex) {{request.title}}
                   .md-list-item-text(flex) {{request.scopeId.name}}
                   .md-list-item-text(flex) {{request.concernId.name}}
                   .md-list-item-text(flex) 
                     md-button.md-no-ink.md-raised {{request.statusId.name}}
                   md-divider
+              md-list-item(ng-show="!requests.length", layout-align="center center")
+                .md-list-item-text(flex, layout-align="center center") No Requests
 
+          div(flex, layout="column" layout-align="center center", ng-show="reqListLoading", style="height:300px")
+            md-progress-circular.md-accent(layout-align="center center", md-mode="indeterminate")
+            h5 Loading...
 
 
 
@@ -95,7 +100,7 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
             h5.title {{selectedRequest.title}}
             //-h6 {{selectedRequest.userId}} John Paulo bonacua
             md-divider
-            h6 {{employeeNames[selectedRequest.userId]}}
+            h6 {{selectedRequest.name}}
             h6 {{selectedRequest.createdAt | date :'MMM d, y   h:mm a' }}
             p {{selectedRequest.description}}
 
@@ -108,7 +113,7 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
         md-list
           md-list-item(ng-repeat="comment in selectedRequest.comments")
             div(layout-margin)
-              h2.md-title(layout="row") {{employeeNames[comment.userId]}}
+              h2.md-title(layout="row") {{comment.name}}
               small {{comment.createdAt | date :'MMM d, y   h:mm a' }}
               p {{comment.message}}
             md-divider

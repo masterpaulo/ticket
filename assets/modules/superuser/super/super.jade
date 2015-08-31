@@ -72,7 +72,7 @@ md-content(flex, layout="column", ng-controller="SuperCtrl", style="height:100%"
         md-list.md-whiteframe-z1.white(style="max-height:600px")
           md-list-item(layout-padding ng-if="selectedScope.admins.length" , class="md-3-line", ng-repeat="admin in selectedScope.admins", ng-click="")
             h5(flex) {{admin.firstName}} {{admin.lastName}}
-            md-button.md-icon-button.md-warn(ng-click="deleteAdmin(admin.id)", aria-label="delete admin")
+            md-button.md-icon-button.md-warn(ng-click="deleteAdmin(admin.admin.id)", aria-label="delete admin")
               md-icon(md-svg-icon="images/icons/trash.svg")
             md-divider(ng-if="!$last")
 

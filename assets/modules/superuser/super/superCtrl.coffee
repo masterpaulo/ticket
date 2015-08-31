@@ -174,8 +174,11 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
         PROFILE.find appuserId: userIds
         .exec (err,data)->
           console.log data
+          data.forEach (profile, i) =>
+            data[i].admin = $scope.selectedScope.admins[i]
           $scope.selectedScope.admins = data
 
+          console.log data
         #console.log $scope.adminIds #list of admin ids of scopes for validation purposes
         return
     )

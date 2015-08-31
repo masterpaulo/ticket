@@ -14,6 +14,8 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
   $scope.scopeStatuses = []
 
   $scope.selected = false
+  $scope.reqListLoading = true
+
 
   $scope.addCommentForm = {}
 
@@ -34,6 +36,8 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
   .success (user)->
     userId = user.appuser
     $scope.userId = userId
+    $scope.userSession = user
+    $scope.activeRole = user.active.roleId
 
     $scope.fillAlertList() #setup alerts if any
 
@@ -52,6 +56,11 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
         console.log errRes
     )
 
+
+  $scope.test = () ->
+    console.log "session user"
+    console.log $scope.userSession
+    return 
 
 
 
@@ -89,7 +98,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
     $scope.alerts = []
     #console.log userScopes
     receive = ReceiverFactory.query(
-      {userId:  $scope.userId, viewed:false },
+      {userId:  $scope.userId, viewed:false , roleId:$scope.activeRole},
       (success) ->
         # console.log "showing alerts received"
         # console.log receive
@@ -125,6 +134,8 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
 
   $scope.fillRequestList = () ->
     #$scope.requests = RequestFactory.query();
+    $scope.reqListLoading = true
+
     userScopes = $scope.scopes
     #console.log userScopes
     if userScopes.length < 1
@@ -135,19 +146,39 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
       (success) ->
         #console.log requests
 
-        requests.forEach (req, i) ->
+        reqs = requests.map (req) ->
           user = req.userId
           USER.find({id:user})
           .populate('profileId')
           .exec (err,data) ->
             #console.log data
-            $scope.employeeNames[user] = data[0].profileId.firstName + " " + data[0].profileId.lastName
-            return
+            # $scope.employeeNames[user] = data[0].profileId.firstName + " " + data[0].profileId.lastName
+            # requests[i].name = data[0].profileId.firstName + " " + data[0].profileId.lastName
+            name = data[0].profileId.firstName + " " + data[0].profileId.lastName
+            req.name = name
+            comments = req.comments.map (comment) ->
+              user = comment.userId
+              USER.find({id:user})
+              .populate('profileId')
+              .exec (err, data) ->
+                # console.log data
+                comment.name = data[0].profileId.firstName + " " + data[0].profileId.lastName
 
-        $scope.requests = requests
 
 
+              return comment
+            req.comments = comments
+            return 
+          return req
+
+        console.log "===================="
+        console.log reqs
+        
+        $scope.requests = reqs
         $scope.requests.reverse()
+
+        $scope.reqListLoading = false
+        
       ,
       (err) ->
         console.log err
@@ -252,19 +283,20 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
       (success) ->
         console.log success
         alertReceivers = []
-        alertReceivers.push {userId:$scope.selectedRequest.userId}
+        alertReceivers.push {userId:$scope.selectedRequest.userId , roleId:32}
         success.admins.forEach (el, i) ->
           if el.userId != $scope.userId
-            alertReceivers.push {userId : el.userId}
+            alertReceivers.push {userId : el.userId, roleId:33}
 
 
 
         newAlert = {
           type: type,
           message: msg+$scope.selectedRequest.title,
-          userId: $scope.userId
-          requestId: requestId
-          receivers: alertReceivers
+          userId: $scope.userId,
+          roleId: $scope.roleId,  #which is obviously 33
+          requestId: requestId,
+          receivers: alertReceivers,
         }
         saveAlert = AlertFactory.save(
           newAlert,
