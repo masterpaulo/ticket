@@ -6,16 +6,40 @@ html(ng-app="ticketApp")
     meta(name="viewport",content="width=device-width, initial-scale=1, maximum-scale=1")
     link( href="https://fontastic.s3.amazonaws.com/26UitzXaU4M4paB5gpLh8e/icons.css",rel="stylesheet")
     // STYLES
-    link(rel="stylesheet", href="/styles/dependencies/angular-material.css?v=aA1GvVj")
-    link(rel="stylesheet", href="/styles/dependencies/angular-material.min.css?v=aA1GvVj")
-    link(rel="stylesheet", href="/styles/common/switchView/switchView.css?v=aA1GvVj")
-    link(rel="stylesheet", href="/styles/administrator.css?v=aA1GvVj")
+    link(rel="stylesheet", href="/styles/dependencies/angular-material.css?v=M1igJhu")
+    link(rel="stylesheet", href="/styles/dependencies/angular-material.min.css?v=M1igJhu")
+    link(rel="stylesheet", href="/styles/common/switchView/switchView.css?v=M1igJhu")
+    link(rel="stylesheet", href="/styles/administrator.css?v=M1igJhu")
     // STYLES END
     link(rel="stylesheet", href="/materialize/materialize.css")
   body
     // TEMPLATES
-    script(type="text/javascript", src="/templates/jst_employee.js?v=9PoKQJc")
+    script(type="text/javascript", src="/templates/jst_employee.js?v=jCtWoWi")
     // TEMPLATES END
+
+    // SCRIPTS
+    script(src="/js/dependencies/socket.io.js?v=fLHT21d")
+    script(src="/js/dependencies/angular.min.js?v=fLHT21d")
+    script(src="/js/dependencies/angular-aria.js?v=fLHT21d")
+    script(src="/js/dependencies/angular-resource.js?v=fLHT21d")
+    script(src="/js/dependencies/angular-animate.js?v=fLHT21d")
+    script(src="/js/dependencies/angular-material.js?v=fLHT21d")
+    script(src="/js/dependencies/FileSaver.js?v=fLHT21d")
+    script(src="/js/dependencies/angular-aria.min.js?v=fLHT21d")
+    script(src="/js/dependencies/angular-material.min.js?v=fLHT21d")
+    script(src="/js/dependencies/angular-route.js?v=fLHT21d")
+    script(src="/js/dependencies/angular.js?v=fLHT21d")
+    script(src="/js/dependencies/clickoutside.directive.js?v=fLHT21d")
+    script(src="/js/dependencies/lodash.js?v=fLHT21d")
+    script(src="/js/employee/app.js?v=fLHT21d")
+    script(src="/js/employee/employee/employee.js?v=fLHT21d")
+    script(src="/js/common/CryptoJs.js?v=fLHT21d")
+    script(src="/js/common/NavigationCtrl.js?v=fLHT21d")
+    script(src="/js/common/ngMeditab.js?v=fLHT21d")
+    script(src="/js/common/superModel.js?v=fLHT21d")
+    script(src="/js/common/switchView/SwitchViewDir.js?v=fLHT21d")
+    // SCRIPTS END
+
     section
         header
         ng-view
@@ -29,28 +53,7 @@ html(ng-app="ticketApp")
 
         alert-holder(position="top-right")
         switch(position="bottom-right")
-    // SCRIPTS
-    script(src="/js/dependencies/socket.io.js?v=ziQK3ye")
-    script(src="/js/dependencies/angular.min.js?v=ziQK3ye")
-    script(src="/js/dependencies/angular-aria.js?v=ziQK3ye")
-    script(src="/js/dependencies/angular-resource.js?v=ziQK3ye")
-    script(src="/js/dependencies/angular-animate.js?v=ziQK3ye")
-    script(src="/js/dependencies/angular-material.js?v=ziQK3ye")
-    script(src="/js/dependencies/FileSaver.js?v=ziQK3ye")
-    script(src="/js/dependencies/angular-aria.min.js?v=ziQK3ye")
-    script(src="/js/dependencies/angular-material.min.js?v=ziQK3ye")
-    script(src="/js/dependencies/angular-route.js?v=ziQK3ye")
-    script(src="/js/dependencies/angular.js?v=ziQK3ye")
-    script(src="/js/dependencies/clickoutside.directive.js?v=ziQK3ye")
-    script(src="/js/dependencies/lodash.js?v=ziQK3ye")
-    script(src="/js/employee/app.js?v=ziQK3ye")
-    script(src="/js/employee/employee/employee.js?v=ziQK3ye")
-    script(src="/js/common/CryptoJs.js?v=ziQK3ye")
-    script(src="/js/common/NavigationCtrl.js?v=ziQK3ye")
-    script(src="/js/common/ngMeditab.js?v=ziQK3ye")
-    script(src="/js/common/superModel.js?v=ziQK3ye")
-    script(src="/js/common/switchView/SwitchViewDir.js?v=ziQK3ye")
-    // SCRIPTS END
+
 
 
     if sails.config.livereloadPath

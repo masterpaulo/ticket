@@ -176,7 +176,6 @@ app.controller 'SuperCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $md
           console.log data
           $scope.selectedScope.admins = data
 
-        #console.log $scope.adminIds #list of admin ids of scopes for validation purposes
         return
     )
 

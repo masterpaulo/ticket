@@ -18,6 +18,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
   $scope.requests = []
   $scope.alerts = []
   $scope.scopes = ScopeFactory.query()
+  $scope.comments = CommentFactory.query()
 
   $scope.selectedScope = {}
   $scope.scopeConcerns = []
@@ -69,7 +70,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
     debounceFn = $mdUtil.debounce((->
       $mdSidenav(navID).toggle().then ->
         $log.debug 'toggle ' + navID + ' is done'
-        console.log $scope.userId
+        # console.log $scope.userId
         return
 
       return
@@ -141,6 +142,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
     $scope.toggleRight()
 
   $scope.addRequest = (event, err) ->
+    console.log 'addrequest'
 
 
     if err
@@ -156,7 +158,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
     alertReceivers = []
     $scope.selectedScope.admins.forEach (el, i) ->
       alertReceivers.push {userId : el.userId}
-    
+
     # set new alert data of the new request
     newAlert = {
       type: 'request',
@@ -165,7 +167,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
       receivers: alertReceivers
     }
 
-    
+
     # create request
     saveRequest = RequestFactory.save(
       newRequest,
@@ -174,7 +176,7 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
         $scope.fillRequestList()
         $scope. addRequestForm = {}
 
-        #get new reqeustId 
+        #get new reqeustId
         newAlert.requestId = requestData.id
 
         #create alert
@@ -191,6 +193,94 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
         console.log err
     )
 
+  $scope.onlyUnique = (value, index, self) ->
+    return self.indexOf(value) == index;
+
+
+  $scope.uniqueId = () ->
+    $scope.allCommentedId = []
+    angular.forEach($scope.comments, (value,key) ->
+      $scope.allCommentedId.push JSON.stringify value.userId
+    )
+    # console.log $scope.allCommentedId
+    uniqueId = $scope.allCommentedId.filter($scope.onlyUnique)
+    $scope.allCommentedId = []
+
+    uniqueId
+
+  $scope.AllNames = () ->
+    $scope.allNames = []
+
+    uniqueId = $scope.uniqueId()
+    angular.forEach(uniqueId, (value,key) ->
+      userId = value
+
+      USER.find({id:userId})
+      .populate('profileId')
+      .exec (err,data) ->
+        if data
+
+          name = data[0].profileId.firstName + " " + data[0].profileId.lastName
+          appuserId = data[0].profileId.appuserId
+
+          $scope.allNames.push({userId: appuserId, name: name})
+          $scope.Names = $scope.allNames
+
+          # a = true
+
+    )
+    $scope.allNames = []
+    $scope.Names
+
+
+      # console.log value
+  $scope.searchUserExist = (nameKey, myArray) ->
+
+
+    # console.log 'searchUserExist ni'
+    i = 0
+    while i < myArray.length
+      if myArray[i].userId == nameKey
+        return myArray[i]
+      i++
+    return
+
+  $scope.addUsertoExist = (userId) ->
+    # $scope.allNames = []
+
+    # console.log 'addUsertoExist'
+    USER.find(userId)
+    .populate('profileId')
+    .exec (err,data) ->
+      if data
+        $scope.name = data[0].profileId.firstName + " " + data[0].profileId.lastName
+        # console.log data[0].profileId.firstName + " " +
+        #  # $scope.Names = $scope.allNames
+        # console.log name
+        console.log $scope.name
+
+    $scope.name
+
+
+
+
+  $scope.allUsers = () ->
+
+    # console.log 'ALLUSERS'
+    # console.log $scope.selectedRequest.comments
+
+    $scope.AllNames()
+
+    # $scope.searchUserExist()
+    $scope.selectedRequest.comments.forEach (value, key) ->
+      resultObject = $scope.searchUserExist(value.userId, $scope.Names);
+      # console.log resultObject.name
+      $scope.selectedRequest.comments[key].name = resultObject.name
+
+
+
+
+    # console.log $scope.selectedRequest.comments
 
 
 
@@ -202,20 +292,22 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
 
 
     $scope.toView = true
+    $scope.allUsers()
+
 
     $scope.toggleRight()
-
-    #inject view for 'edit scope' form
 
     return
 
 
   $scope.fillRequestList = () ->
+
     #$scope.requests = RequestFactory.query();
     requests = RequestFactory.query(
       {userId: $scope.userId},
       (success) ->
         $scope.requests = requests
+
 
       ,
       (err) ->
@@ -233,12 +325,15 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
 
   $scope.addComment = () ->
 
+
+    $scope.userId
+
     newComment = $scope.addCommentForm
     newComment.userId = $scope.userId
     newComment.requestId = $scope.selectedRequest.id
 
-    console.log "showing selected request"
-    console.log $scope.selectedRequest.scopeId
+    # console.log "showing selected request"
+    # console.log $scope.selectedRequest.scopeId
 
     newAlert = {}
 
@@ -247,10 +342,12 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
     scopeObj = ScopeFactory.get(
       {id:scopeId},
       (success) ->
-        console.log success
+        # console.log success
         alertReceivers = []
         success.admins.forEach (el, i) ->
           alertReceivers.push {userId : el.userId}
+
+
 
 
         newAlert = {
@@ -259,43 +356,57 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
           userId: $scope.userId
           requestId: newComment.requestId
           receivers: alertReceivers
+
         }
 
         saveComment = CommentFactory.save(
           newComment,
           (success) ->
             console.log "added comment"
-            console.log success
+            # console.log 'ZZZZ' + JSON.stringify success
+            resultObject = $scope.searchUserExist(newComment.userId, $scope.Names);
+            # console.log 'MAO NI ANG RESULTOBJECT'+resultObject.length
+            if resultObject
+              console.log 'IF'
+              # console.log resultObject.name
+              success.name = resultObject.name
+
+            else
+              console.log 'ELSE'
+              newName = $scope.addUsertoExist(newComment.userId);
+              # console.log 'this is in the savecomment'+resultObject
+              success.name = newName
+            # success.name = 'gerald'
             $scope.selectedRequest.comments.push success
+            console.log 'THIS IS YOUR NAME'+ JSON.stringify $scope.selectedRequest.comments
+            # $scope.selectedRequest.comments.name = 'gerald'
+
+            # console.log $scope.selectedRequest.comments
+
             $scope.addCommentForm = {}
             saveAlert = AlertFactory.save(
               newAlert,
               (alertData) ->
-                console.log alertData
+                # console.log alertData
             )
           ,
           (err) ->
-            console.log err
+            # console.log err
 
         )
-        console.log newAlert
+        # console.log newAlert
 
         return
       ,
       (err) ->
-        console.log err
+        # console.log err
         return
     )
 
-    # get all the receivers of the alert (usually admins)
-    
-    # $scope.selectedScope.admins.forEach (el, i) ->
-    #   alertReceivers.push {userId : el.userId}
-    
-    # set new alert data of the new request
-    
+
 
     return
+
 
 
 
@@ -307,6 +418,12 @@ app.controller 'EmployeeCtrl', (ApiObject, $scope, $filter,$timeout, $http, $mdS
   # $scope.order('createAt',false)
 
 
+  init = () ->
+
+
+
+
+  init();
 
   #configurations
 

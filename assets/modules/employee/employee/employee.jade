@@ -86,11 +86,11 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
 
 
     md-content(flex, style="position:relative", ng-if='toView')
-    
+
       md-list
         md-list-item(ng-repeat="comment in selectedRequest.comments")
           div(layout-margin)
-            h2.md-title(layout="row") {{comment.userId}}
+            h2.md-title(layout="row") {{comment.name}}
             small {{comment.createdAt | date :'MMM d, y   h:mm a' }}
             p {{comment.message}}
           md-divider

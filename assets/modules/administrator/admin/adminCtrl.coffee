@@ -62,7 +62,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
   USERROLE = new ApiObject "userrole"
 
 
-  
+
 
 
   buildToggler = (navID) ->
@@ -114,7 +114,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
     $scope.selectRequest $scope.requests[reqI.indexOf(alertScopeId)]
 
 
-    
+
     ReceiverFactory.get {id: receiverId}, (saveReceiver) ->
       saveReceiver.viewed = true
       saveReceiver.$save () ->
@@ -128,7 +128,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
     userScopes = $scope.scopes
     #console.log userScopes
     if userScopes.length < 1
-      return 
+      return
 
     requests = RequestFactory.query(
       {scopeId:  userScopes },
@@ -229,7 +229,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
         $scope.selectedRequest.comments.push success
         $scope.addCommentForm = {}
         $scope.addAlert(newComment.requestId, "comment") #
-        
+
       ,
       (err) ->
         console.log err
@@ -241,7 +241,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
 
 
   $scope.addAlert = (requestId, type) ->
-    
+
 
     newAlert = {}
     msg = if type=="status" then "Status changed : " else "New comment : "
@@ -271,7 +271,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
           (alertData) ->
             console.log alertData
         )
-        
+
         console.log newAlert
 
         return
