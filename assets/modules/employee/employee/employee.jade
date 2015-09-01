@@ -35,7 +35,7 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
               md-menu
                 md-button.md-primary.md-hue-1.md-raised(ng-click="$mdOpenMenu($event)", md-menu-origin) 
                   div(layout="row", layout-padding, layout-align="center center")
-                    h6 SCOPE : All
+                    h6 SCOPE : {{ filterScopeBox[0] ? 'ALL' : 'Custom ( '+(filteredScopeIds.length)+' )' }}
                     section(flex)
                     md-icon(md-svg-src="images/icons/down-arrow.svg")
                 md-menu-content(width="6", style="max-height:800px;")
@@ -54,22 +54,22 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
                     div(layout="row")
                       p(flex) Select All
                       //- md-icon.black-text(md-svg-src="images/icons/check.svg", ng-show="isScopeChecked()")
-                      md-checkbox(ng-model="selectAllScope" value="true", aria-label="check {{}}", ng-change="filterScope(0)")
+                      md-checkbox(ng-model="filterScopeBox[0]" , checked="isScopeChecked(0)", aria-label="check {{}}", ng-change="filterScope(0)")
 
               md-menu
                 md-button.md-primary.md-hue-1.md-raised(ng-click="$mdOpenMenu($event)", md-menu-origin) 
                   div(layout="row", layout-padding, layout-align="center center")
-                    h6 CONCERN : All
+                    h6 CONCERN : {{ filterConcernBox[0] ? 'ALL' : 'Custom ( '+(filteredConcernIds.length)+' )' }}
                     section(flex)
                     md-icon(md-svg-src="images/icons/down-arrow.svg")
                 md-menu-content(width="6", style="max-height:800px;")
                   md-menu-item(layout="row")
                     h6.md-title(flex, md-menu-align-target) Filter by selected concerns :
                   md-divider(flex)
-                  md-menu-item(ng-repeat="concern in concerns")
+                  md-menu-item(ng-repeat="concern in filteredConcerns")
                   
                     div(layout="row")
-                      p(flex) {{concern.name}}
+                      p(flex) {{concern.scopeId.name}} - {{concern.name}}
                       md-checkbox(ng-model="filterConcernBox[concern.id]", checked="isConcernChecked(concern.id)" value="true", aria-label="check {{}}", ng-change="filterConcern(concern)")
 
                   md-divider(flex)
@@ -78,22 +78,30 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
                     div(layout="row")
                       p(flex) Select All
                       //- md-icon.black-text(md-svg-src="images/icons/check.svg", ng-show="isScopeChecked()")
-                      md-checkbox(ng-model="selectAllConcern" value="true", aria-label="check {{}}", ng-change="filterConcern(0)")
+                      md-checkbox(ng-model="filterConcernBox[0]" value="true", aria-label="check {{}}", ng-change="filterConcern(0)")
 
               md-menu
                 md-button.md-primary.md-hue-1.md-raised(ng-click="$mdOpenMenu($event)", md-menu-origin) 
                   div(layout="row", layout-padding, layout-align="center center")
-                    h6 STATUS : New
+                    h6 STATUS : {{ filterStatusBox[0] ? 'ALL' : 'Custom ( '+(filteredStatusIds.length)+' )' }}
                     section(flex)
                     md-icon(md-svg-src="images/icons/down-arrow.svg")
                 md-menu-content(width="6", style="max-height:800px;")
                   md-menu-item(layout="row")
                     h6.md-title(flex, md-menu-align-target) Filter by selected statuses :
                   md-divider(flex)
-                  md-menu-item(ng-repeat="status in statuses")
-                    md-button(ng-click="filterStatus()")
-                      div(layout="row")
-                        p(flex) {{status.name}}
+                  md-menu-item(ng-repeat="status in filteredStatuses")
+                  
+                    div(layout="row")
+                      p(flex) {{status.scopeId.name}} - {{status.name}}
+                      md-checkbox(ng-model="filterStatusBox[status.id]", checked="isStatusChecked(status.id)" value="true", aria-label="check {{}}", ng-change="filterStatus(status)")
+
+                  md-divider(flex)
+                  md-menu-item()
+                    div(layout="row")
+                      p(flex) Select All
+                      //- md-icon.black-text(md-svg-src="images/icons/check.svg", ng-show="isScopeChecked()")
+                      md-checkbox(ng-model="filterStatusBox[0]" value="true", aria-label="check {{}}", ng-change="filterStatus(0)")
 
             //- div(flex="15", layout-margin)
             //-   md-select(ng-model="filterScope", placeholder="Scope", multiple)
@@ -124,10 +132,11 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
 
               h3(flex, layout-align="center center") Status
 
-          md-list(flex, style="max-height:700px;overflow:auto;", ng-show="!reqListLoading")
-              md-list-item(layout="row" , class="md-3-line", ng-repeat="request in requests | filter:search" , ng-click="selectRequest(request)")
+          md-list(flex, style="max-height:700px;overflow:auto;", ng-show="reqListLoaded && namesLoaded")
+              md-list-item(layout="row" , class="md-3-line", 
+                ng-repeat="request in requests | filter:search | requestScopeFilter: filteredScopeIds | requestConcernFilter: filteredConcernIds | requestStatusFilter: filteredStatusIds" , ng-click="selectRequest(request)")
                   .md-list-item-text(flex) {{ request.createdAt | date :'MMM d, y   h:mm a' }}
-                  .md-list-item-text(flex) {{request.name}}
+                  .md-list-item-text(flex) {{request.title}}
                   .md-list-item-text(flex) {{request.scopeId.name}}
                   .md-list-item-text(flex) {{request.concernId.name}}
                   .md-list-item-text(flex) {{request.statusId.name}}
@@ -135,9 +144,13 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
               md-list-item(ng-show="!requests.length")
                 .md-list-item-text(flex) No Requests
 
-          div(flex, layout="column" layout-align="center center", ng-show="reqListLoading", style="height:300px")
+          div(flex, layout="column" layout-align="center center", ng-show="(!reqListLoaded || !namesLoaded) && !oops", style="height:300px")
             md-progress-circular.md-accent(layout-align="center center", md-mode="indeterminate")
             h5 Loading...
+
+          div(flex, layout="column" layout-align="center center", ng-show="oops", style="height:300px")
+            h5.red-text Well, that sucks. 
+            h6.red-text Something went wrong, pleas refresh your browser
 
       div(layout="row" class="fixed-action-btn", style="right: 37px;bottom: 108px;", flex="30")
         md-button(class="md-fab md-accent ", ng-click="toAddRequest()", aria-label="add scope")
@@ -153,7 +166,7 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
           h2 {{selectedRequest.scopeId.name}}
           small {{selectedRequest.concernId.name}}
         section(flex)
-        md-button.md-raised.green(ng-show="!toView") {{selectedScope.defaultStatus.name}}
+        md-button.md-raised.green(ng-show="!toView && selectedScope.defaultStatus.name") {{selectedScope.defaultStatus.name}}
         md-button.md-raised.green(ng-show="toView") {{selectedRequest.statusId.name}}
 
       div.black-text(ng-if="toView")
@@ -181,7 +194,7 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
           textarea(ng-model="addCommentForm.message", columns="1" md-maxlength="150", required)
 
 
-        md-button.md-raised.md-primary(ng-click="addComment()") Add
+        md-button.md-raised.md-primary(ng-click="addComment()") COMMENT
         md-button.md-raised(ng-click="close()") Cancel
 
 
@@ -211,7 +224,7 @@ md-content(flex, layout="column", ng-controller="EmployeeCtrl", style="height:10
           textarea(ng-model="addRequestForm.description", columns="1" md-maxlength="150")
 
         div(layout='row' layout-align='center right')
-          md-button.md-raised.md-primary.md-accent(flex, ng-click='addRequest()' ng-disabled="RequestForm.$invalid") ADD
+          md-button.md-raised.md-primary.md-accent(flex, ng-click='addRequest()' ng-disabled="RequestForm.$invalid") SEND
           md-button.md-primary(flex, ng-click='close()') CANCEL
 
 

@@ -21,16 +21,100 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
             md-menu-item(ng-repeat="alert in alerts")
               md-button(ng-click="selectAlert(alert); $mdCloseMenu($event)")
                 div(layout="row")
-                  p(flex) {{alert.alertId.message}}
-        
+                  p(flex) {{alert.alertId.message}}      
         seciotn(flex="5")
 
   div(layout="row", flex)
     div(flex, layout="column", style="background-color:#F7F7F7" )
       md-toolbar(class=" md-hue-3", flex="25")
         div(layout="row",class="md-toolbar-tools")
-          div(flex)
-            div(flex offset='70')
+          div(flex, layout="row", layout-align="end center")
+            div
+              h3 Filter :
+            div(flex="50")
+              md-menu
+                md-button.md-primary.md-hue-1.md-raised(ng-click="$mdOpenMenu($event)", md-menu-origin) 
+                  div(layout="row", layout-padding, layout-align="center center")
+                    h6 SCOPE : {{ filterScopeBox[0] ? 'ALL' : 'Custom ( '+(filteredScopeIds.length)+' )' }}
+                    section(flex)
+                    md-icon(md-svg-src="images/icons/down-arrow.svg")
+                md-menu-content(width="6", style="max-height:800px;")
+                  md-menu-item(layout="row")
+                    h6.md-title(flex, md-menu-align-target) Filter by selected scopes :
+                  md-divider(flex)
+                  md-menu-item(ng-repeat="scope in filterScopes")
+                  
+                    div(layout="row")
+                      p(flex) {{scope.name}}
+                      //- md-icon.black-text(md-svg-src="images/icons/check.svg", ng-show="isScopeChecked(scope.id)")
+                      md-checkbox(ng-model="filterScopeBox[scope.id]", checked="isScopeChecked(scope.id)" value="true", aria-label="check {{}}", ng-change="filterScope(scope)")
+                  md-divider(flex)
+                  md-menu-item
+                  
+                    div(layout="row")
+                      p(flex) Select All
+                      //- md-icon.black-text(md-svg-src="images/icons/check.svg", ng-show="isScopeChecked()")
+                      md-checkbox(ng-model="filterScopeBox[0]" , checked="isScopeChecked(0)", aria-label="check {{}}", ng-change="filterScope(0)")
+
+              md-menu
+                md-button.md-primary.md-hue-1.md-raised(ng-click="$mdOpenMenu($event)", md-menu-origin) 
+                  div(layout="row", layout-padding, layout-align="center center")
+                    h6 CONCERN : {{ filterConcernBox[0] ? 'ALL' : 'Custom ( '+(filteredConcernIds.length)+' )' }}
+                    section(flex)
+                    md-icon(md-svg-src="images/icons/down-arrow.svg")
+                md-menu-content(width="6", style="max-height:800px;")
+                  md-menu-item(layout="row")
+                    h6.md-title(flex, md-menu-align-target) Filter by selected concerns :
+                  md-divider(flex)
+                  md-menu-item(ng-repeat="concern in filteredConcerns")
+                  
+                    div(layout="row")
+                      p(flex) {{concern.scopeId.name}} - {{concern.name}}
+                      md-checkbox(ng-model="filterConcernBox[concern.id]", checked="isConcernChecked(concern.id)" value="true", aria-label="check {{}}", ng-change="filterConcern(concern)")
+
+                  md-divider(flex)
+                  md-menu-item
+                  
+                    div(layout="row")
+                      p(flex) Select All
+                      //- md-icon.black-text(md-svg-src="images/icons/check.svg", ng-show="isScopeChecked()")
+                      md-checkbox(ng-model="filterConcernBox[0]" value="true", aria-label="check {{}}", ng-change="filterConcern(0)")
+
+              md-menu
+                md-button.md-primary.md-hue-1.md-raised(ng-click="$mdOpenMenu($event)", md-menu-origin) 
+                  div(layout="row", layout-padding, layout-align="center center")
+                    h6 STATUS : {{ filterStatusBox[0] ? 'ALL' : 'Custom ( '+(filteredStatusIds.length)+' )' }}
+                    section(flex)
+                    md-icon(md-svg-src="images/icons/down-arrow.svg")
+                md-menu-content(width="6", style="max-height:800px;")
+                  md-menu-item(layout="row")
+                    h6.md-title(flex, md-menu-align-target) Filter by selected statuses :
+                  md-divider(flex)
+                  md-menu-item(ng-repeat="status in filteredStatuses")
+                  
+                    div(layout="row")
+                      p(flex) {{status.scopeId.name}} - {{status.name}}
+                      md-checkbox(ng-model="filterStatusBox[status.id]", checked="isStatusChecked(status.id)" value="true", aria-label="check {{}}", ng-change="filterStatus(status)")
+
+                  md-divider(flex)
+                  md-menu-item()
+                    div(layout="row")
+                      p(flex) Select All
+                      //- md-icon.black-text(md-svg-src="images/icons/check.svg", ng-show="isScopeChecked()")
+                      md-checkbox(ng-model="filterStatusBox[0]" value="true", aria-label="check {{}}", ng-change="filterStatus(0)")
+
+            //- div(flex="15", layout-margin)
+            //-   md-select(ng-model="filterScope", placeholder="Scope", multiple)
+            //-     md-option(layout="row" , value="one", flex)
+            //-       div.md-text(flex, layout="row", layout-align="space-around center") 
+            //-         h6(flex) ONE
+            //-         md-icon.black-text(md-svg-src="images/icons/check.svg")
+            //-     md-option(value="two", layout="row") 
+            //-       div(flex, layout="row")
+            //-         h6 TWO
+            //-         md-icon.black-text(md-svg-src="images/icons/check.svg")
+            div(flex)
+            div(flex="25", layout-margin)
               input(type='text' placeholder='SEARCH' ng-model='search')
       div(layout-margin,flex, layout="row" )
         .md-whiteframe-z2(flex)
@@ -48,8 +132,8 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
                 a(href='', ng-click="reverse=!reverse;order('concernId.name', reverse)") Concern
               h3(flex, layout-align="center center") Status
 
-          md-list(flex, style="max-height:700px;overflow:auto;" ,ng-show="!reqListLoading" )
-              md-list-item(layout="row" , class="md-3-line", ng-repeat="request in requests | filter:search " , ng-click="selectRequest(request)")
+          md-list(flex, style="max-height:700px;overflow:auto;" ,ng-show="reqListLoaded && namesLoaded" )
+              md-list-item(layout="row" , class="md-3-line", ng-repeat="request in requests | filter:search | requestScopeFilter: filteredScopeIds | requestConcernFilter: filteredConcernIds | requestStatusFilter: filteredStatusIds" , ng-click="selectRequest(request)")
                   .md-list-item-text(flex) {{ request.createdAt | date :'MMM d, y   h:mm a' }}
                   .md-list-item-text(flex) {{request.name}}
                   .md-list-item-text(flex) {{request.title}}
@@ -61,7 +145,7 @@ md-content(flex, layout="column", ng-controller="AdminCtrl", style="height:100%"
               md-list-item(ng-show="!requests.length", layout-align="center center")
                 .md-list-item-text(flex, layout-align="center center") No Requests
 
-          div(flex, layout="column" layout-align="center center", ng-show="reqListLoading", style="height:300px")
+          div(flex, layout="column" layout-align="center center", ng-show="!reqListLoaded || !namesLoaded", style="height:300px")
             md-progress-circular.md-accent(layout-align="center center", md-mode="indeterminate")
             h5 Loading...
 
