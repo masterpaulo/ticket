@@ -2,7 +2,7 @@
 
 
 
-app.controller 'ConcernCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, ConcernFactory) ->
+app.controller 'ConcernCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, ConcernFactory,StatusFactory) ->
   $scope.scopes = []
   $scope.users = []
   $scope.userSearch = ''
@@ -15,6 +15,11 @@ app.controller 'ConcernCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $
   $scope.selected = false
 
   $scope.concerns = []
+  $scope.addStatusForm = {}
+  $scope.editStatusForm = {}
+  $scope.statuses = []
+
+  $scope.chooseStatus = false
 
 
 
@@ -78,10 +83,9 @@ app.controller 'ConcernCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $
       console.log err
       return
 
-    # console.log event
-    # console.log err
-    # $scope.addScopeForm.name = ''
+    $scope.chooseStatus = false
     $scope.toEdit = false
+
     $scope.toggleRight()
 
   $scope.addConcern = (event, err) ->
@@ -125,6 +129,7 @@ app.controller 'ConcernCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $
 
     $scope.editConcernForm.name = concern.name
     $scope.toEdit = concern
+    $scope.chooseStatus = false
 
     $scope.toggleRight()
 
@@ -168,28 +173,138 @@ app.controller 'ConcernCtrl', (ApiObject, $scope, $timeout, $http, $mdSidenav, $
     $scope.selected = true
     $scope.selectedScope = scope
     #console.log 'selected scope : ' + $scope.selectedScope.name
+    $scope.defaultStatus = scope.defaultStatus
     $scope.fillConcernList()
+    $scope.fillStatusList()
     return
 
   $scope.fillConcernList = () ->
-    #console.log $scope.selectedScope # check selected scope
+
     test = ScopeFactory.get(
       {id: $scope.selectedScope.id},
       (successRes) ->
         $scope.selectedScope.concerns = test.concerns
-        # $scope.selectedScope.concerns.forEach (concern, i) ->
-        #   $scope.concerns.push concern
 
-        #console.log $scope.adminIds #list of admin ids of scopes for validation purposes
+        return
+    )
+
+    return
+
+  $scope.toAddStatus = (event, err) ->
+    if err
+      console.log err
+      return
+    $scope.chooseStatus = true
+    $scope.toEditStat = false
+
+    $scope.toggleRight()
+
+  $scope.addStatus = (event, err) ->
+
+    if err
+      console.log err
+      return
+
+
+
+    newStatus =
+      name: $scope.addStatusForm.name,
+      scopeId: $scope.selectedScope.id
+
+
+
+    console.log newStatus
+
+    saveStatus = StatusFactory.save(
+      newStatus,
+      (successRes) ->
+        # $scope.statuses.push newStatus
+        $scope.close()
+        $scope.addStatusForm = {}
+        $scope.fillStatusList()
+        console.log successRes
+      ,
+      (err) ->
+        console.log err
+
+
+    )
+
+  $scope.setDefaultStatus = (defaultStatus) ->
+    console.log defaultStatus
+    scopeId = $scope.selectedScope.id
+    ScopeFactory.get {id: scopeId}, (saveScope) ->
+      saveScope.defaultStatus = defaultStatus
+      saveScope.$save (success) ->
+        console.log success
+        $scope.selectedScope = success
+        $scope.fillScopeList()
+
+
+    return
+
+  $scope.deleteStatus = (event, err) ->
+    console.log "going to delete you ...."
+    return
+
+
+
+
+
+  $scope.toEditStatus = (status) ->
+
+
+    $scope.editStatusForm.name = status.name
+    $scope.toEdit = status
+    $scope.chooseStatus = true
+    $scope.toEditStat = true
+
+    $scope.toggleRight()
+
+
+    return
+
+
+  $scope.editStatus = (event, err) ->
+    if err
+      console.log err
+      return
+
+    updateStatus =
+      name: $scope.editStatusForm.name
+
+
+    statusId = $scope.toEdit.id
+
+    scopeId = $scope.selectedScope.id
+    newScope = $scope.editScopeForm
+    StatusFactory.get { id: statusId }, (saveStatus) ->
+      saveStatus.name = updateStatus.name
+      saveStatus.$save ()->
+        $scope.fillStatusList()
+
+        $scope.close()
+        console.log "updated!!"
+
+
+        $scope.toEdit = false
+        $scope.editScopeForm = {}
+
+    return
+
+  $scope.fillStatusList = () ->
+
+    test = ScopeFactory.get(
+      {id: $scope.selectedScope.id},
+      (successRes) ->
+        $scope.selectedScope.status = test.status
+
         return
     )
 
 
 
-
     return
-
-
 
 
 
@@ -220,6 +335,11 @@ app.factory 'ConcernFactory' , [
     $resource '/concern/:id', {id:'@id'} ,
 ]
 
+app.factory 'StatusFactory' , [
+  '$resource'
+  ($resource) ->
+    $resource '/status/:id', {id:'@id'} ,
+]
 
 
 
