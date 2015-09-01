@@ -2,19 +2,40 @@
 
 
 
-app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory, CommentFactory, AlertFactory, ReceiverFactory) ->
+app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSidenav, $mdUtil, $log, $resource, ScopeFactory, AdminFactory, RequestFactory, CommentFactory, AlertFactory, ReceiverFactory, ConcernFactory, StatusFactory) ->
 
   $scope.scopes = []
   $scope.comments = []
   $scope.userSearch = ''
   $scope.search = ''
-  $scope.scopes = ScopeFactory.query();
+  # $scope.scopes = ScopeFactory.query();
+  # $scope.filterScopes = ScopeFactory.query( {limit: 0}, (data)->
+  #   data.forEach (scope) ->
+  #     $scope.filteredScopeIds.push scope.id
+
+
+  #   # console.log $scope.filteredScopeIds
+  # )
+  # $scope.filterConcerns = ConcernFactory.query( {limit: 0}, (data) ->
+  #   $scope.filteredConcerns = data
+  #   data.forEach (concern) ->
+  #     $scope.filteredConcernIds.push concern.id
+  # )
+  # $scope.filterStatuses = StatusFactory.query( {limit: 0}, (data) ->
+  #   $scope.filteredStatuses = data
+  #   data.forEach (status) ->
+  #     $scope.filteredStatusIds.push status.id
+  # )
+
+
 
   $scope.selectedScope = {}
   $scope.scopeStatuses = []
 
   $scope.selected = false
-  $scope.reqListLoading = true
+  $scope.reqListLoaded = false
+  $scope.namesLoaded = false
+
 
 
   $scope.addCommentForm = {}
@@ -25,7 +46,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
   $scope.scopes = [];
 
 #========================
-
+ 
   $scope.requests = []
   $scope.alerts = []
 
@@ -46,8 +67,28 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
       {userId: userId},
       (successRes) ->
         #console.log administer
+        scopes = []
         administer.forEach (admin, i) ->
           scopeAdministered.push admin.scopeId.id
+          scopes.push admin.scopeId
+
+
+        $scope.filterScopes = scopes
+        $scope.filteredScopeIds = scopeAdministered
+
+        $scope.filterConcerns = ConcernFactory.query( {scopeId:scopeAdministered}, (data) ->
+          $scope.filteredConcerns = data
+          data.forEach (concern) ->
+            $scope.filteredConcernIds.push concern.id
+        )
+        $scope.filterStatuses = StatusFactory.query( {scopeId:scopeAdministered}, (data) ->
+          $scope.filteredStatuses = data
+          data.forEach (status) ->
+            $scope.filteredStatusIds.push status.id
+        )
+
+
+
         $scope.scopes = scopeAdministered
         $scope.fillRequestList()
         $scope.fillAlertList()
@@ -134,7 +175,9 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
 
   $scope.fillRequestList = () ->
     #$scope.requests = RequestFactory.query();
-    $scope.reqListLoading = true
+    $scope.reqListLoaded = false
+    $scope.namesLoaded = false
+
 
     userScopes = $scope.scopes
     #console.log userScopes
@@ -160,11 +203,12 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
               user = comment.userId
               USER.find({id:user})
               .populate('profileId')
-              .exec (err, data) ->
+              .exec( (err, data) ->
                 # console.log data
                 comment.name = data[0].profileId.firstName + " " + data[0].profileId.lastName
-
-
+              ).then () ->
+                console.log "finished loading names"
+                $scope.namesLoaded = true
 
               return comment
             req.comments = comments
@@ -177,7 +221,7 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
         $scope.requests = reqs
         $scope.requests.reverse()
 
-        $scope.reqListLoading = false
+        $scope.reqListLoaded = true
         
       ,
       (err) ->
@@ -252,18 +296,25 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
     newComment.userId = $scope.userId
     newComment.requestId = $scope.selectedRequest.id
 
-    saveComment = CommentFactory.save(
-      newComment,
-      (success) ->
-        console.log "added comment"
-        console.log success
-        $scope.selectedRequest.comments.push success
-        $scope.addCommentForm = {}
-        $scope.addAlert(newComment.requestId, "comment") #
 
-      ,
-      (err) ->
-        console.log err
+    commenter = ""
+    PROFILE.find({appuserId:$scope.userId})
+    .exec (err, data) ->
+      commenter = data[0].firstName + " " + data[0].lastName
+      
+      saveComment = CommentFactory.save(
+        newComment,
+        (success) ->
+          console.log "added comment"
+          console.log success
+          success.name = commenter
+          $scope.selectedRequest.comments.push success
+          $scope.addCommentForm = {}
+          $scope.addAlert(newComment.requestId, "comment") #
+          
+        ,
+        (err) ->
+          console.log err
 
     )
 
@@ -335,6 +386,212 @@ app.controller 'AdminCtrl', (ApiObject, $scope, $timeout, $filter, $http, $mdSid
 
   $scope.order('title',false)
 
+##################################################################################
+            # SORTING AND FILTERING FUNCTIONS #
+##################################################################################
+  orderBy = $filter('orderBy')
+  # $scope.requests = Request
+  $scope.order = (predicate, reverse) ->
+    $scope.requests = orderBy($scope.requests, predicate, reverse)
+
+  # $scope.order('createAt',false)
+
+  $scope.filteredScopeIds = []
+  $scope.filterScopeBox = []
+  $scope.filterScopeBox[0] = true
+  $scope.filteredScopeIds[0] = 0
+
+
+  $scope.filteredConcernIds = []
+  $scope.filterConcernBox = []
+  $scope.filterConcernBox[0] = true
+  $scope.filteredConcernIds[0] = 0
+
+  $scope.filteredStatusIds = []
+  $scope.filterStatusBox = []
+  $scope.filterStatusBox[0] = true
+  $scope.filteredStatusIds[0] = 0
+
+  $scope.filterScope = (scope) ->
+    #console.log $scope
+    # console.log this.scope
+    if scope == 0
+      #console.log this
+      if this.filterScopeBox[0] == true
+        $scope.filteredScopeIds = $scope.filterScopes.map (scope) ->
+          $scope.filterScopeBox[scope.id] = false
+          return scope.id
+      else
+        $scope.filterScopes.map (scope) ->
+          $scope.filterScopeBox[scope.id] = false
+        $scope.filteredScopeIds = []
+      # return
+    else
+
+      $scope.filteredScopeIds = [] if this.filterScopeBox[0] is true
+      $scope.filterScopeBox[0] = false
+      scopeId = this.scope.id
+      if ($scope.filteredScopeIds.indexOf scopeId) > -1
+        delete $scope.filteredScopeIds[ $scope.filteredScopeIds.indexOf scopeId ]
+      else
+        $scope.filteredScopeIds.push scopeId
+
+    #console.log $scope.filteredScopeIds
+    $scope.filteredConcerns  = $filter('concernFilter')($scope.filterConcerns, $scope.filteredScopeIds)
+    $scope.filteredStatuses = $filter('concernFilter')($scope.filterStatuses, $scope.filteredScopeIds)
+    $scope.filterConcernBox[0] = true
+    $scope.filterStatusBox[0] = true
+    $scope.filterConcern(0)
+    $scope.filterStatus(0)
+    return
+
+  $scope.isScopeChecked = (scopeId) ->
+    # scopeId = this.scope.id
+    if ($scope.filteredScopeIds.indexOf scopeId) > -1
+      return true
+    return false
+
+
+
+  $scope.filterConcern = (concern) ->
+    #console.log $scope
+    # console.log this.scope
+
+
+    if concern == 0
+      #console.log this
+      if this.filterConcernBox[0] == true
+        $scope.filteredConcernIds = $scope.filteredConcerns.map (concern) ->
+          $scope.filterConcernBox[concern.id] = false
+          return concern.id
+      else
+        $scope.filteredConcerns.map (concern) ->
+          $scope.filterConcernBox[concern.id] = false
+        $scope.filteredConcernIds = []
+      # return
+    else
+
+      $scope.filteredConcernIds = [] if this.filterConcernBox[0] is true
+      $scope.filterConcernBox[0] = false
+      concernId = this.concern.id
+      if ($scope.filteredConcernIds.indexOf concernId) > -1
+        delete $scope.filteredConcernIds[ $scope.filteredConcernIds.indexOf concernId ]
+      else
+        $scope.filteredConcernIds.push concernId
+
+    #console.log $scope.filteredConcernIds
+    #console.log $scope.filterConcernBox
+
+    
+
+
+    return
+
+  $scope.isConcernChecked = (concernId) ->
+    # scopeId = this.scope.id
+    if ($scope.filteredConcernIds.indexOf concernId) > -1
+      return true
+    return false
+
+  $scope.filterStatus = (status) ->
+    #console.log $scope
+    # console.log this.scope
+
+
+    if status == 0
+      #console.log this
+      if this.filterStatusBox[0] == true
+        $scope.filteredStatusIds = $scope.filteredStatuses.map (status) ->
+          $scope.filterStatusBox[status.id] = false
+          return status.id
+      else
+        $scope.filteredStatuses.map (status) ->
+          $scope.filterStatusBox[status.id] = false
+        $scope.filteredStatusIds = []
+      # return
+    else
+
+      $scope.filteredStatusIds = [] if this.filterStatusBox[0] is true
+      $scope.filterStatusBox[0] = false
+      statusId = this.status.id
+      if ($scope.filteredStatusIds.indexOf statusId) > -1
+        delete $scope.filteredStatusIds[ $scope.filteredStatusIds.indexOf statusId ]
+      else
+        $scope.filteredStatusIds.push statusId
+
+    #console.log $scope.filteredStatusIds
+    #console.log $scope.filterStatusBox
+
+    
+
+
+    return
+
+  $scope.isStatusChecked = (statusId) ->
+    # scopeId = this.scope.id
+    if ($scope.filteredStatusIds.indexOf statusId) > -1
+      return true
+    return false
+
+
+
+
+
+  #configurations
+
+
+app.filter 'concernFilter', [ 
+  () ->
+    return (concerns, selectedScopeIds) ->
+      tempConcerns = []
+      selectedScopeIds.forEach (scopeId) ->
+        concerns.forEach (concern) ->
+          if(scopeId == concern.scopeId.id)
+            tempConcerns.push concern
+
+      return tempConcerns
+
+]
+
+app.filter 'requestScopeFilter', [ 
+  () ->
+    return (requests, selectedScopeIds) ->
+      tempReqs = []
+      selectedScopeIds.forEach (scopeId) ->
+        requests.forEach (request) ->
+          if(scopeId == request.scopeId.id)
+            tempReqs.push request
+
+      return tempReqs
+
+]
+
+app.filter 'requestConcernFilter', [ 
+  () ->
+    return (requests, selectedConcernIds) ->
+      tempReqs = []
+      selectedConcernIds.forEach (concernId) ->
+        requests.forEach (request) ->
+          if(concernId == request.concernId.id)
+            tempReqs.push request
+
+      return tempReqs
+
+]
+
+app.filter 'requestStatusFilter', [ 
+  () ->
+    return (requests, selectedStatusIds) ->
+      tempReqs = []
+      selectedStatusIds.forEach (statusId) ->
+        requests.forEach (request) ->
+          if(statusId == request.statusId.id)
+            tempReqs.push request
+
+      return tempReqs
+
+]
+
 
 
 
@@ -371,8 +628,6 @@ app.factory 'CommentFactory' , [
     $resource '/comment/:id', {id:'@id'} ,
 ]
 
-
-
 app.factory 'AlertFactory' , [
   '$resource'
   ($resource) ->
@@ -387,7 +642,17 @@ app.factory 'ReceiverFactory' , [
 
 
 
+app.factory 'ConcernFactory' , [
+  '$resource'
+  ($resource) ->
+    $resource '/concern/:id', {id:'@id'} ,
+]
 
+app.factory 'StatusFactory' , [
+  '$resource'
+  ($resource) ->
+    $resource '/status/:id', {id:'@id'} ,
+]
 
 
 
